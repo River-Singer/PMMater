@@ -1,0 +1,26 @@
+{
+  "actions": [
+    {
+      "id": "weekly-outcome-candidate",
+      "operation": "create",
+      "table": "weekly_commitments",
+      "record_id": "WC-EXAMPLE-2",
+      "values": {
+        "project_id": "PRJ-DEMO",
+        "work_item_id": "WI-002-2",
+        "week_start": "2026-11-09",
+        "outcome": "完成异常重试场景复测记录",
+        "due_date": "2026-11-13",
+        "owner_id": "PER-DEV",
+        "verification": "QA核对测试记录和两项异常场景",
+        "status": "candidate"
+      },
+      "source": {
+        "id": "fictional-member-plan",
+        "url": "https://example.invalid/minutes/20261113",
+        "quote": "虚构候选计划：本周完成异常重试场景复测记录，由QA核对。",
+        "kind": "confirmed_fact"
+      }
+    }
+  ]
+}

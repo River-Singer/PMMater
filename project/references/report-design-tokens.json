@@ -1,0 +1,591 @@
+{
+  "$description": "pmmaster 独立 HTML 报告的设计 token。由 pm_core/design_tokens.py 生成，请勿手改。",
+  "source": "pm_core/design_tokens.py",
+  "regenerate": "python -m pm_core.design_tokens",
+  "applies_to": [
+    "pm_core/project_report.py (REPORT_CSS)",
+    "pm_core/operating.py",
+    "pm_core/management_text.py",
+    "pm_core/weekly.py",
+    "demo/*.html"
+  ],
+  "color": {
+    "surface": {
+      "page": {
+        "$value": "#f4f4f2",
+        "$type": "color",
+        "$description": "页面底色",
+        "$extensions": {
+          "cssVar": "--page"
+        }
+      },
+      "card": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "卡片、表格、Waterfall 任务行的白底",
+        "$extensions": {
+          "cssVar": "--card"
+        }
+      },
+      "soft": {
+        "$value": "#f8f8f6",
+        "$type": "color",
+        "$description": "次级底色：表头、空状态、详情面板、Waterfall 表头/父任务行/图例",
+        "$extensions": {
+          "cssVar": "--soft"
+        }
+      },
+      "soft-2": {
+        "$value": "#f1f1ee",
+        "$type": "color",
+        "$description": "进度条槽、中性标签底",
+        "$extensions": {
+          "cssVar": "--soft-2"
+        }
+      },
+      "hover": {
+        "$value": "#efefec",
+        "$type": "color",
+        "$description": "行悬停、选中行、环形图底环",
+        "$extensions": {
+          "cssVar": "--hover"
+        }
+      },
+      "band": {
+        "$value": "#f3f3f0",
+        "$type": "color",
+        "$description": "Waterfall 分组汇总行",
+        "$extensions": {
+          "cssVar": "--band"
+        }
+      },
+      "band-strong": {
+        "$value": "#ebebe7",
+        "$type": "color",
+        "$description": "Waterfall 项目根汇总行",
+        "$extensions": {
+          "cssVar": "--band-strong"
+        }
+      }
+    },
+    "border": {
+      "line": {
+        "$value": "#e6e5e0",
+        "$type": "color",
+        "$description": "卡片与表格描边",
+        "$extensions": {
+          "cssVar": "--line"
+        }
+      },
+      "line-2": {
+        "$value": "#efeeea",
+        "$type": "color",
+        "$description": "行间分隔线",
+        "$extensions": {
+          "cssVar": "--line-2"
+        }
+      },
+      "line-strong": {
+        "$value": "#d6d5cf",
+        "$type": "color",
+        "$description": "中性强调条、缺失信息虚线框、时间轴刻度线",
+        "$extensions": {
+          "cssVar": "--line-strong"
+        }
+      },
+      "neutral": {
+        "$value": "#c9c8c1",
+        "$type": "color",
+        "$description": "中性填充：缓冲容量、详情面板侧边、滚动条",
+        "$extensions": {
+          "cssVar": "--neutral"
+        }
+      },
+      "grid": {
+        "$value": "#0000000d",
+        "$type": "color",
+        "$description": "时间轴网格线与悬停阴影（5% 黑）",
+        "$extensions": {
+          "cssVar": "--grid"
+        }
+      }
+    },
+    "text": {
+      "ink": {
+        "$value": "#1d1d1b",
+        "$type": "color",
+        "$description": "标题、数值、正文；也是选中按钮底色与数据截止线",
+        "$extensions": {
+          "cssVar": "--ink"
+        }
+      },
+      "ink-2": {
+        "$value": "#4f4e4a",
+        "$type": "color",
+        "$description": "次级正文",
+        "$extensions": {
+          "cssVar": "--ink-2"
+        }
+      },
+      "muted": {
+        "$value": "#77766f",
+        "$type": "color",
+        "$description": "说明文字、表头",
+        "$extensions": {
+          "cssVar": "--muted"
+        }
+      },
+      "faint": {
+        "$value": "#9a9993",
+        "$type": "color",
+        "$description": "占位与缺失提示（待确认/待指定）",
+        "$extensions": {
+          "cssVar": "--faint"
+        }
+      },
+      "link": {
+        "$value": "#2a6fc4",
+        "$type": "color",
+        "$description": "链接",
+        "$extensions": {
+          "cssVar": "--link"
+        }
+      }
+    },
+    "status": {
+      "critical": {
+        "solid": {
+          "$value": "#d03b3b",
+          "$type": "color",
+          "$description": "已延期·未完成、P0、需优先核对；Waterfall 事实延期条",
+          "$extensions": {
+            "cssVar": "--critical"
+          }
+        },
+        "ink": {
+          "$value": "#a82d2d",
+          "$type": "color",
+          "$description": "critical 状态的文字",
+          "$extensions": {
+            "cssVar": "--critical-ink"
+          }
+        },
+        "bg": {
+          "$value": "#fcefee",
+          "$type": "color",
+          "$description": "critical 状态的标签底",
+          "$extensions": {
+            "cssVar": "--critical-bg"
+          }
+        },
+        "line": {
+          "$value": "#e7a3ad",
+          "$type": "color",
+          "$description": "critical 状态的浅描边（P0 区块、延期交付标签）",
+          "$extensions": {
+            "cssVar": "--critical-line"
+          }
+        }
+      },
+      "serious": {
+        "solid": {
+          "$value": "#e0784c",
+          "$type": "color",
+          "$description": "延期交付：晚于对照日期才完成",
+          "$extensions": {
+            "cssVar": "--serious"
+          }
+        },
+        "ink": {
+          "$value": "#a5512e",
+          "$type": "color",
+          "$description": "serious 状态的文字",
+          "$extensions": {
+            "cssVar": "--serious-ink"
+          }
+        },
+        "bg": {
+          "$value": "#fdf2ec",
+          "$type": "color",
+          "$description": "serious 状态的标签底；容量已排满",
+          "$extensions": {
+            "cssVar": "--serious-bg"
+          }
+        }
+      },
+      "warning": {
+        "solid": {
+          "$value": "#e5a50a",
+          "$type": "color",
+          "$description": "延期风险、待确认、资料缺口；Waterfall 延期风险斜纹",
+          "$extensions": {
+            "cssVar": "--warning"
+          }
+        },
+        "ink": {
+          "$value": "#8a6200",
+          "$type": "color",
+          "$description": "warning 状态的文字",
+          "$extensions": {
+            "cssVar": "--warning-ink"
+          }
+        },
+        "bg": {
+          "$value": "#fdf6e3",
+          "$type": "color",
+          "$description": "warning 状态的标签底",
+          "$extensions": {
+            "cssVar": "--warning-bg"
+          }
+        },
+        "line": {
+          "$value": "#ecd9a8",
+          "$type": "color",
+          "$description": "warning 的浅描边与斜纹浅色",
+          "$extensions": {
+            "cssVar": "--warning-line"
+          }
+        }
+      },
+      "good": {
+        "solid": {
+          "$value": "#2ba68c",
+          "$type": "color",
+          "$description": "已确认完成、已验收；Waterfall 实际完成条",
+          "$extensions": {
+            "cssVar": "--good"
+          }
+        },
+        "ink": {
+          "$value": "#1d7a64",
+          "$type": "color",
+          "$description": "good 状态的文字",
+          "$extensions": {
+            "cssVar": "--good-ink"
+          }
+        },
+        "bg": {
+          "$value": "#eaf6f2",
+          "$type": "color",
+          "$description": "good 状态的标签底；延期交付条的浅底",
+          "$extensions": {
+            "cssVar": "--good-bg"
+          }
+        }
+      },
+      "info": {
+        "solid": {
+          "$value": "#4f86d9",
+          "$type": "color",
+          "$description": "进行中、待决定事项、项目投入容量",
+          "$extensions": {
+            "cssVar": "--info"
+          }
+        },
+        "ink": {
+          "$value": "#2b5ea8",
+          "$type": "color",
+          "$description": "info 状态的文字",
+          "$extensions": {
+            "cssVar": "--info-ink"
+          }
+        },
+        "bg": {
+          "$value": "#eef3fb",
+          "$type": "color",
+          "$description": "info 状态的标签底",
+          "$extensions": {
+            "cssVar": "--info-bg"
+          }
+        }
+      }
+    },
+    "waterfall": {
+      "baseline": {
+        "$value": "#8f8e88",
+        "$type": "color",
+        "$description": "原计划细线",
+        "$extensions": {
+          "cssVar": "--wf-baseline"
+        }
+      },
+      "acceptance": {
+        "$value": "#6e55c4",
+        "$type": "color",
+        "$description": "验收节点菱形描边",
+        "$extensions": {
+          "cssVar": "--wf-acceptance"
+        }
+      },
+      "remediation": {
+        "$value": "#3d72c4",
+        "$type": "color",
+        "$description": "预期/实际补救菱形",
+        "$extensions": {
+          "cssVar": "--wf-remediation"
+        }
+      }
+    },
+    "capacity": {
+      "ops": {
+        "$value": "#58b5c3",
+        "$type": "color",
+        "$description": "容量条中的运维投入（项目投入用 --info，缓冲用 --neutral）",
+        "$extensions": {
+          "cssVar": "--cap-ops"
+        }
+      }
+    }
+  },
+  "chart": {
+    "work_type": {
+      "feature": {
+        "$value": "#9b87e7",
+        "$type": "color",
+        "$description": "开发功能",
+        "$extensions": {
+          "cssVar": "--type-feature"
+        }
+      },
+      "improvement": {
+        "$value": "#58b5c3",
+        "$type": "color",
+        "$description": "优化",
+        "$extensions": {
+          "cssVar": "--type-improvement"
+        }
+      },
+      "bug": {
+        "$value": "#d9ae67",
+        "$type": "color",
+        "$description": "缺陷修复",
+        "$extensions": {
+          "cssVar": "--type-bug"
+        }
+      },
+      "incident": {
+        "$value": "#899cd8",
+        "$type": "color",
+        "$description": "故障恢复",
+        "$extensions": {
+          "cssVar": "--type-incident"
+        }
+      },
+      "request": {
+        "$value": "#7faed2",
+        "$type": "color",
+        "$description": "服务请求",
+        "$extensions": {
+          "cssVar": "--type-request"
+        }
+      },
+      "action": {
+        "$value": "#9eb88d",
+        "$type": "color",
+        "$description": "会议/协调行动",
+        "$extensions": {
+          "cssVar": "--type-action"
+        }
+      },
+      "other": {
+        "$value": "#a28ae8",
+        "$type": "color",
+        "$description": "未单独配色的类型",
+        "$extensions": {
+          "cssVar": "--type-other"
+        }
+      }
+    },
+    "work_status": {
+      "done": {
+        "$value": "#2ba68c",
+        "$type": "color",
+        "$description": "已确认完成"
+      },
+      "in_review": {
+        "$value": "#a587d2",
+        "$type": "color",
+        "$description": "待确认"
+      },
+      "in_progress": {
+        "$value": "#648cce",
+        "$type": "color",
+        "$description": "进行中"
+      },
+      "blocked": {
+        "$value": "#d78a80",
+        "$type": "color",
+        "$description": "受阻"
+      },
+      "ready": {
+        "$value": "#d5ad6b",
+        "$type": "color",
+        "$description": "待开始"
+      },
+      "intake": {
+        "$value": "#a3b0c2",
+        "$type": "color",
+        "$description": "待分流"
+      },
+      "cancelled": {
+        "$value": "#b7c1ce",
+        "$type": "color",
+        "$description": "取消"
+      }
+    },
+    "priority": {
+      "P0": {
+        "$value": "#dc6678",
+        "$type": "color",
+        "$description": "P0 紧急"
+      },
+      "P1": {
+        "$value": "#d8a05b",
+        "$type": "color",
+        "$description": "P1 高"
+      },
+      "P2": {
+        "$value": "#6993ce",
+        "$type": "color",
+        "$description": "P2 一般"
+      },
+      "P3": {
+        "$value": "#a0adbe",
+        "$type": "color",
+        "$description": "P3 低"
+      },
+      "ungraded": {
+        "$value": "#bec8d5",
+        "$type": "color",
+        "$description": "待分级"
+      }
+    },
+    "commitment": {
+      "accepted_on_time": {
+        "$value": "#2ba68c",
+        "$type": "color",
+        "$description": "按期确认"
+      },
+      "accepted_late": {
+        "$value": "#e0784c",
+        "$type": "color",
+        "$description": "延期后确认"
+      },
+      "pending": {
+        "$value": "#648cce",
+        "$type": "color",
+        "$description": "尚未到期／待完成"
+      },
+      "overdue": {
+        "$value": "#d03b3b",
+        "$type": "color",
+        "$description": "原承诺已过期"
+      },
+      "deferred": {
+        "$value": "#d5ad6b",
+        "$type": "color",
+        "$description": "预测移出本周"
+      },
+      "cancelled": {
+        "$value": "#b7b6af",
+        "$type": "color",
+        "$description": "已取消"
+      },
+      "missing": {
+        "$value": "#a587d2",
+        "$type": "color",
+        "$description": "记录缺失"
+      }
+    }
+  },
+  "waterfall_marks": {
+    "原计划": "细线，var(--wf-baseline)",
+    "当前预测": "工作类型色（chart.work_type）加 var(--wf-forecast-filter)",
+    "事实延期": "var(--critical) 实色条",
+    "延期风险": "var(--warning) 与 var(--warning-line) 的 135° 斜纹",
+    "实际完成": "var(--good) 实色条",
+    "延期交付": "var(--good-bg) 底加 var(--critical) 双线框",
+    "验收节点": "白底菱形，var(--wf-acceptance) 描边",
+    "补救节点": "菱形，var(--wf-remediation)；预期为空心，实际为实心",
+    "数据截止线": "var(--ink)，不透明度 var(--wf-cutoff-opacity)；不是状态色"
+  },
+  "typography": {
+    "fontFamily": {
+      "$value": "\"Microsoft YaHei\",\"PingFang SC\",\"Noto Sans CJK SC\",system-ui,Arial,sans-serif",
+      "$type": "fontFamily",
+      "$extensions": {
+        "cssVar": "--font"
+      }
+    },
+    "lineHeight": 1.6,
+    "weights": [
+      400,
+      500,
+      600,
+      650,
+      700
+    ],
+    "scale": {
+      "34px": "环形图中心数字",
+      "32px": "指标卡数值",
+      "30px": "完成日期",
+      "26px": "页面结论 h1",
+      "24px": "窄屏完成日期",
+      "22px": "页标题 h2 / 报告名",
+      "20px": "窄屏 h2",
+      "19px": "打印 h2",
+      "16px": "区块标题 h3",
+      "15px": "卡片标题、导语",
+      "14px": "正文",
+      "13px": "表格与卡片正文",
+      "12px": "说明、标签（正文下限）",
+      "11px": "图内标注",
+      "10px": "仅 Waterfall 刻度副标"
+    }
+  },
+  "radius": {
+    "999px": "胶囊标签",
+    "14px": "页面主卡片（--radius）",
+    "12px": "卡片、面板、表格外框",
+    "10px": "次级块",
+    "8px": "按钮、提示块",
+    "4px": "条形图数据端、优先级标签",
+    "2px": "Waterfall 条"
+  },
+  "layout": {
+    "contentWidth": "96%",
+    "breakpoints": {
+      "narrow": "850px",
+      "medium": "1200px"
+    },
+    "print": "A4 横向，每页一节"
+  },
+  "other": {
+    "--radius": {
+      "$value": "14px",
+      "$description": "页面主卡片圆角"
+    },
+    "--font": {
+      "$value": "\"Microsoft YaHei\",\"PingFang SC\",\"Noto Sans CJK SC\",system-ui,Arial,sans-serif",
+      "$description": "全站字体"
+    },
+    "--wf-forecast-filter": {
+      "$value": "saturate(1.15) brightness(.92)",
+      "$description": "浅色画布上加深预测条的工作类型色"
+    },
+    "--wf-cutoff-opacity": {
+      "$value": ".42",
+      "$description": "数据截止线（--ink）的不透明度"
+    }
+  },
+  "usage_rules": [
+    "颜色只用本文件的 token；在 CSS 中写 var(--名称)，不要写新的色值。需要新颜色时先在 pm_core/design_tokens.py 增加 token。",
+    "状态色是保留色：critical=已延期/P0，serious=延期交付，warning=延期风险/待确认，good=已完成/已验收，info=进行中/待决定。不要把它们当普通配色或系列色。",
+    "状态不能只靠颜色表达：必须同时有文字标签、位置或纹理（延期风险用斜纹，延期交付用双线框）。",
+    "数值和正文用 --ink / --ink-2 / --muted，不用状态色给数字上色；状态用色条、圆点或标签承载。",
+    "同一实体在所有报告页面保持同一颜色（工作类型、工作状态、优先级见 chart）。",
+    "页面与 Waterfall 都是浅色中性底，不使用纯黑或带蓝色调的大面积背景。",
+    "缺失的事实显示为 --faint 色的“待确认/待指定”虚线框，不留空白，也不编造内容。",
+    "字号只用 typography.scale 中的档位；正文不小于 12px。"
+  ]
+}

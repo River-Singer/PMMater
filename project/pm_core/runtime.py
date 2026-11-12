@@ -1,0 +1,217 @@
+"""One project tick: fresh planning plus scoped, deduplicated reminder dispatch."""
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
+import json
+from pathlib import Path
+
+from .actions import Ledger, digest
+from .feishu import FeishuError
+from .store import parse_datetime
+
+
+def load_config(path):
+    config = json.loads(Path(path).read_text(encoding='utf-8-sig'))
+    if not config.get('project_id') or not config.get('timezone'):
+        raise ValueError('Project and project timezone are required')
+    ZoneInfo(config['timezone'])
+    if not isinstance(config.get('enabled', False), bool):
+        raise ValueError('enabled must be a JSON boolean')
+    attempts = config.get('max_attempts', 3)
+    if isinstance(attempts, bool) or not isinstance(attempts, int) or not 1 <= attempts <= 10:
+        raise ValueError('max_attempts must be an integer between 1 and 10')
+    for key in ('daily_time', 'daily_deadline', 'collection_time', 'plan_cutoff', 'result_cutoff', 'quiet_after'):
+        if config.get(key):
+            time.fromisoformat(config[key])
+    for value in config.get('inspection_times', ['10:30', '16:00']):
+        time.fromisoformat(value)
+    if any(k in config for k in ('token', 'access_token', 'app_secret')):
+        raise ValueError('Store secrets in the host credential store/environment, not project JSON')
+    return config
+
+
+def plan_tick(data, config, *, now):
+    from .attendance import plan_daily_confirmations
+    from .operating import plan_followups
+    instant = parse_datetime(now) if isinstance(now, str) else now
+    if instant.tzinfo is None:
+        raise ValueError('Tick time requires timezone')
+    local = instant.astimezone(ZoneInfo(config['timezone']))
+    project = next((p for p in data.get('projects', []) if p['id'] == config['project_id']), None)
+    if not project:
+        raise ValueError('Configured project not found')
+    calendar = next((c for c in data.get('calendars', []) if c['id'] == project['calendar_id']), None)
+    if not calendar or calendar['timezone'] != config['timezone']:
+        raise ValueError('Runtime timezone must match project calendar')
+    attendance = plan_daily_confirmations(data, config['project_id'], instant)
+    people = {r['id']: r for r in data.get('people', [])}
+    items = []
+    if local.strftime('%H:%M') >= config.get('quiet_after', '18:00'):
+        return {'project_id': config['project_id'], 'date': local.date().isoformat(), 'attendance': attendance, 'recipients': {}}
+    daily_at = config.get('daily_time', '09:00')
+    if local.strftime('%H:%M') >= daily_at:
+        for r in attendance['eligible']:
+            items.append({'key': 'daily:' + local.date().isoformat() + ':' + r['person_id'],
+                          'kind': 'daily_confirmation_followup' if local.strftime('%H:%M') >= config.get('daily_deadline', '10:30') else 'daily_confirmation', 'recipient_id': r['person_id'],
+                          'reason': '请补齐今日' + '、'.join({'AM': '上午', 'PM': '下午'}[p] for p in r['periods']) + '尚未确认的安排信息（见待维护字段）。',
+                          'required_fields': r.get('required_fields', []),
+                          'deadline': config.get('daily_deadline', '10:30'), 'periods': r['periods']})
+    # Ordinary task reminders follow project calendar, not literal Monday-Friday.
+    day = next((d for d in data.get('calendar_days', []) if d['calendar_id'] == project['calendar_id'] and d['date'] == local.date().isoformat()), None)
+    from .project_calendar import workday_status
+    working = workday_status(data, config['project_id'], local.date().isoformat())
+    if working['verified'] and working['is_workday'] and project.get('stage') not in ('closed', 'paused'):
+        for item in plan_followups(data, now=instant, config=config):
+            collection = item['kind'] in ('monday_plan', 'friday_result')
+            earliest = config.get('collection_time', '09:00') if collection else min(config.get('inspection_times') or ['10:30', '16:00'])
+            if local.strftime('%H:%M') < earliest:
+                continue
+            if collection:
+                cutoff = config.get('plan_cutoff' if item['kind'] == 'monday_plan' else 'result_cutoff', '10:30')
+                if cutoff and local.strftime('%H:%M') >= cutoff:
+                    item = dict(item, kind=item['kind'] + '_followup')
+            items.append(item)
+    grouped = {}
+    for item in items:
+        person = people.get(item['recipient_id'])
+        if not person or not person.get('active'):
+            continue
+        grouped.setdefault(person['id'], []).append(item)
+    return {'project_id': config['project_id'], 'date': local.date().isoformat(),
+            'attendance': attendance, 'recipients': grouped}
+
+
+def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, history_provider=None, observer=None):
+    # Provider runs on every tick immediately before sending, so replies/closed tasks stop reminders.
+    data = data_provider()
+    from .schedule_audit import audit_schedule_changes
+    from .schedule_history import source_identity
+    audit_policy = dict(config.get('schedule_audit', {}))
+    audit_policy.setdefault('decision_makers', config.get('policy', {}).get('decision_makers', []))
+    if history_provider:
+        audit = audit_schedule_changes(data, history=history_provider(), now=now, policy=audit_policy)
+    elif observer:
+        audit = observer.observe(data, source_id=source_identity(config), project_id=config['project_id'], now=now, policy=audit_policy)
+    else:
+        audit = audit_schedule_changes(data, now=now, policy=audit_policy)
+    plan = plan_tick(data, config, now=now)
+    people = {p['id']: p for p in data.get('people', [])}
+    results = []
+    from .schema import TABLES
+    labels = {f.name: f.label for meta in TABLES.values() for f in meta['fields']}
+    labels.update({'weekly_commitments.outcome': '本周可验证成果', 'weekly_commitments.due_date': '周成果期限', 'weekly_commitments.verification': '周成果验证方式'})
+    labels['future_leave_change'] = '未来休假有无变化'
+    for person_id, items in plan['recipients'].items():
+        person = people[person_id]
+        uid = person.get('feishu_user_id')
+        if not uid or person.get('feishu_id_type', 'open_id') != 'open_id':
+            results.append({'person_id': person_id, 'status': 'pending_identity'})
+            continue
+        pending = []
+        for item in items:
+            key = ':'.join(('reminder', config['project_id'], plan['date'], person_id,
+                            item['kind'], item.get('table', ''), item.get('record_id', '')))
+            row = next((r for r in data.get(item.get('table'), []) if r['id'] == item.get('record_id')), {})
+            if row.get('priority') == 'P0' or row.get('impact') == 'critical':
+                key += ':' + digest({k: row.get(k) for k in ('status', 'blocker_reason', 'forecast_finish', 'deadline_at', 'impact')})
+            previous = ledger.get(key)
+            if previous and previous['status'] in ('succeeded', 'running', 'unknown'):
+                continue
+            pending.append((key, item))
+        if not pending:
+            results.append({'person_id': person_id, 'status': 'already_processed'})
+            continue
+        message = '\n'.join((i.get('title', '') + '：' if i.get('title') else '') + i['reason'] +
+                '\n需维护：' + '、'.join(labels.get(f, f) for f in i.get('required_fields', [])) +
+                ('；截止：' + str(i['deadline']) if i.get('deadline') else '') for _, i in pending)
+        if dry_run:
+            results.append({'person_id': person_id, 'status': 'preview', 'text': message,
+                            'items': [i for _, i in pending]})
+            continue
+        if not config.get('enabled') or not config.get('chat_id'):
+            results.append({'person_id': person_id, 'status': 'disabled'})
+            continue
+        if person_id not in config.get('allowed_recipients', []):
+            results.append({'person_id': person_id, 'status': 'outside_recipient_scope'})
+            continue
+        claimed = []
+        for key, item in pending:
+            fingerprint = digest({'key': key, 'chat_id': config['chat_id']})
+            state = ledger.claim(key, fingerprint, max_attempts=config.get('max_attempts', 3))
+            if state.get('claimed_now'):
+                claimed.append((key, item, state, fingerprint))
+        if not claimed:
+            continue
+        # Rebuild after claims, excluding any occurrence another worker owns.
+        message = '\n'.join((i.get('title', '') + '：' if i.get('title') else '') + i['reason'] +
+                '\n需维护：' + '、'.join(labels.get(f, f) for f in i.get('required_fields', [])) +
+                ('；截止：' + str(i['deadline']) if i.get('deadline') else '') for _, i, _, _ in claimed)
+        try:
+            sent = client.mention(config['chat_id'], uid, message, request_id=claimed[0][2]['request_id'])
+            detail = {'items': [i for _, i, _, _ in claimed], 'message_id': sent.get('message_id')}
+            status = 'succeeded' if detail['message_id'] else 'unknown'
+        except FeishuError as exc:
+            status = 'unknown' if exc.uncertain else 'failed'
+            detail = {'items': [i for _, i, _, _ in claimed], 'error': str(exc)}
+        for key, _, _, fingerprint in claimed:
+            ledger.save(key, fingerprint, status, detail)
+        results.append({'person_id': person_id, 'status': status, 'detail': detail})
+    reviews = dispatch_schedule_reviews(data, audit, config, ledger, client, now=now, dry_run=dry_run)
+    return {'plan': plan, 'deliveries': results, 'schedule_audit': audit, 'pm_reviews': reviews}
+
+
+def dispatch_schedule_reviews(data, audit, config, ledger, client, *, now, dry_run=True):
+    """Date edit concerns only reach an explicitly configured private PM channel."""
+    from .management_text import schedule_paragraphs
+    from .project_calendar import workday_status
+    project = next((p for p in data.get('projects', []) if p['id'] == config['project_id']), None)
+    if not project:
+        return []
+    instant = parse_datetime(now) if isinstance(now, str) else now
+    local = instant.astimezone(ZoneInfo(config['timezone']))
+    workday = workday_status(data, project['id'], local.date().isoformat())
+    in_window = (min(config.get('inspection_times') or ['10:30', '16:00']) <= local.strftime('%H:%M') < config.get('quiet_after', '18:00'))
+    pm = next((p for p in data.get('people', []) if p['id'] == project.get('pm_id')), {})
+    results = []
+    for signal in audit.get('signals', []):
+        if signal['severity'] == 'info':
+            continue
+        key = 'schedule-review:' + project['id'] + ':' + signal['key']
+        previous = ledger.get(key)
+        if previous and previous['status'] in ('succeeded', 'running', 'unknown'):
+            results.append({'key': key, 'status': previous['status'], 'duplicate': True})
+            continue
+        detail = {'signal': signal, 'recipient_id': project.get('pm_id'), 'audience': 'pm_private'}
+        if not config.get('pm_private_chat_id') or config.get('pm_private_recipient_id') != project.get('pm_id'):
+            results.append(dict(detail, key=key, status='pending_private_channel'))
+            continue
+        if project.get('pm_id') not in config.get('allowed_recipients', []):
+            results.append(dict(detail, key=key, status='outside_recipient_scope'))
+            continue
+        if not pm.get('feishu_user_id') or pm.get('feishu_id_type', 'open_id') != 'open_id':
+            results.append(dict(detail, key=key, status='pending_identity'))
+            continue
+        if not in_window or not workday.get('verified') or not workday.get('is_workday') or project.get('stage') in ('closed', 'paused'):
+            results.append(dict(detail, key=key, status='waiting_review_window'))
+            continue
+        message = '\n'.join(schedule_paragraphs({'alert_count': 1, 'coverage': {'limitations': []}, 'signals': [signal], 'original_commitments': []}))
+        if dry_run:
+            results.append(dict(detail, key=key, status='preview', text=message))
+            continue
+        if not config.get('enabled'):
+            results.append(dict(detail, key=key, status='disabled'))
+            continue
+        fingerprint = digest({'key': key, 'chat_id': config['pm_private_chat_id']})
+        state = ledger.claim(key, fingerprint, max_attempts=config.get('max_attempts', 3))
+        if not state.get('claimed_now'):
+            results.append(dict(detail, key=key, status=state['status']))
+            continue
+        try:
+            sent = client.mention(config['pm_private_chat_id'], pm['feishu_user_id'], message, request_id=state['request_id'])
+            detail['message_id'] = sent.get('message_id')
+            status = 'succeeded' if detail['message_id'] else 'unknown'
+        except FeishuError as exc:
+            status = 'unknown' if exc.uncertain else 'failed'
+            detail['error'] = str(exc)
+        ledger.save(key, fingerprint, status, detail)
+        results.append(dict(detail, key=key, status=status))
+    return results

@@ -1,0 +1,15 @@
+{
+  "periods": [
+    "PM"
+  ],
+  "values": {
+    "work_location": "remote",
+    "allocation_mode": "shared",
+    "available_hours": 3,
+    "project_hours": 2,
+    "operations_hours": 1,
+    "response_status": "confirmed",
+    "future_leave_change": "no_change",
+    "source": "虚构示例：成员确认下午安排与近期休假无新增变化"
+  }
+}

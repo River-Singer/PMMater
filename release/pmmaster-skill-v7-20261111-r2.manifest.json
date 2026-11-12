@@ -1,0 +1,488 @@
+{
+  "release": "pmmaster-skill-v7-20261111-r2",
+  "schema_version": 7,
+  "source_directory": "project",
+  "source_tree_sha256": "d21da43c7ea44a1019b49c41cf85e235dde7a7e82d8d62aa79bc2ea51eddcc0f",
+  "archive": "pmmaster-skill-v7-20261111-r2.zip",
+  "files": [
+    {
+      "path": "pmmaster/README.md",
+      "bytes": 3292,
+      "sha256": "e41b2d923c17d2253ba51a1bff00e160b71f944867442c5f7efdb5141e3b44a5"
+    },
+    {
+      "path": "pmmaster/SKILL.md",
+      "bytes": 6213,
+      "sha256": "f9926824e0963af2824fa905a30db0cc002b4da462d87032ff929d5a95b263d2"
+    },
+    {
+      "path": "pmmaster/data/calendar_sources.json",
+      "bytes": 441,
+      "sha256": "c7ef80ce6625b51f8a478f1aa772d69c78017bcf1ec0aad0ed33801e84d5c57b"
+    },
+    {
+      "path": "pmmaster/data/calendar_sources_2027.json",
+      "bytes": 312,
+      "sha256": "cb8923ce96fe07a4867d98520a203bc41c164a8221dbc54f8c1fc280fb6535bb"
+    },
+    {
+      "path": "pmmaster/data/cn_2026_holidays.csv",
+      "bytes": 6015,
+      "sha256": "a4daf188e5b35eb76a07aadfef60b5297cf92eba90650842997334f5c9b8ba72"
+    },
+    {
+      "path": "pmmaster/data/cn_2027_holidays.csv",
+      "bytes": 4465,
+      "sha256": "d8290cc19cb605d748603e380bcbb7fbe1943a634ad53b172ce0fb5eb51b62f9"
+    },
+    {
+      "path": "pmmaster/data/schema.json",
+      "bytes": 260275,
+      "sha256": "e34bb6749a123585aa7799c9963c40c8f7a7c5974d37324eb6d4e3ae6c230260"
+    },
+    {
+      "path": "pmmaster/demo/README.md",
+      "bytes": 2420,
+      "sha256": "a7b38d542c3baefc4d0d74adf849680309ad61915a99075022f31f420d0dbd91"
+    },
+    {
+      "path": "pmmaster/demo/demo.sqlite3",
+      "bytes": 741376,
+      "sha256": "aef19c3b3ce196059393ebb5920160c74d41009057168e2219cb628d06497786"
+    },
+    {
+      "path": "pmmaster/demo/demo_facts.json",
+      "bytes": 209943,
+      "sha256": "b98f4bf599478ee2c74c818d7d0942edb374b2ef1507da76fe9b458f05accdb0"
+    },
+    {
+      "path": "pmmaster/demo/weekly_reports/2026-11-02_friday_WR-79a16b8355e7412d.html",
+      "bytes": 83302,
+      "sha256": "84a1c4dcb867a39834c5d55e9e1349930bd6bf45d416f451bab159917512c9d0"
+    },
+    {
+      "path": "pmmaster/demo/weekly_reports/2026-11-02_monday_WR-9f237e9a674744a9.html",
+      "bytes": 79953,
+      "sha256": "92182b4ef6665936993a3a1b8369c03c4b92a58d8e5cd001e3260cdc00497745"
+    },
+    {
+      "path": "pmmaster/demo/持续跟进与延期审议.html",
+      "bytes": 123800,
+      "sha256": "1f1201b34cbee6f20f003d0ee151840efbf17b5ea1dfea091fa5197c4e08f1b1"
+    },
+    {
+      "path": "pmmaster/demo/日期变更审议.html",
+      "bytes": 35664,
+      "sha256": "029b67c012f59090af23d6f91a7308890f5d7060d8689cbf581e399101daf4e8"
+    },
+    {
+      "path": "pmmaster/demo/日期变更审议.json",
+      "bytes": 5400,
+      "sha256": "8da2a4cd8be652ddcfe30639066a3fefa8fe0b0f476b02b94a2dd4c758ba3630"
+    },
+    {
+      "path": "pmmaster/demo/日期观测来源.json",
+      "bytes": 1364,
+      "sha256": "d00a86b1d3b7c8a17ece14d2207362db79adf6f1d692c2cb514e2aa9782ba8ff"
+    },
+    {
+      "path": "pmmaster/demo/月度管理复核.html",
+      "bytes": 49972,
+      "sha256": "1c979f9c7d193e58e45c66dd1cd59bd508fd0fb6754e458be1277f9443d01d69"
+    },
+    {
+      "path": "pmmaster/demo/月度管理复核.json",
+      "bytes": 37546,
+      "sha256": "997ea4f4b788722c1cab703db77b983d459517e6fa4588574892192f4846b49c"
+    },
+    {
+      "path": "pmmaster/demo/本周项目汇报.html",
+      "bytes": 123812,
+      "sha256": "24cdbb05ae33b4925d5b0287277885ae0625dfe22c88260d68aeaa74d156a56f"
+    },
+    {
+      "path": "pmmaster/demo/演示工作台.xlsx",
+      "bytes": 170898,
+      "sha256": "3551dd56d7d6f06e0c818ecb35e1dbd2c9fff5228137edcdb25b0add4a240f39"
+    },
+    {
+      "path": "pmmaster/docs/HTML报告制作说明.md",
+      "bytes": 11165,
+      "sha256": "d1dc201b44e9b32e8aa07fa2264c58971dbf859c5cf4edefea89b05a4312efda"
+    },
+    {
+      "path": "pmmaster/docs/README.md",
+      "bytes": 2601,
+      "sha256": "d37cb42c9dc3f0016bf29763c72cfdb450287d96057a260bd3219939538a0b89"
+    },
+    {
+      "path": "pmmaster/docs/schema.sql",
+      "bytes": 20366,
+      "sha256": "874493796ba7e31af04f8e562ccc0fc8fc3d9862966035cf5c9dbd6f550b8a15"
+    },
+    {
+      "path": "pmmaster/docs/三表分工与维护指南.md",
+      "bytes": 1325,
+      "sha256": "d3c8bd961a8f82b9a3a6c08d580c34baebb383038340e969ba1b8f45b84fd801"
+    },
+    {
+      "path": "pmmaster/docs/字段填写说明.md",
+      "bytes": 2918,
+      "sha256": "072de83157b5fe135c420921d8bd107c8a19bfa65650c0d10b9fa09a6b7976f8"
+    },
+    {
+      "path": "pmmaster/docs/字段字典.md",
+      "bytes": 49375,
+      "sha256": "d9c03089a09f4d089006832801726142c35b7903d6d7714c70dde73cbe8accbf"
+    },
+    {
+      "path": "pmmaster/docs/日期变更审议与留痕.md",
+      "bytes": 4933,
+      "sha256": "51f0b5b1cb18b124d07fe0e16bb5287b55e35c38719aa1a59cbf52697a2bbf39"
+    },
+    {
+      "path": "pmmaster/docs/角色与生命周期工作流.md",
+      "bytes": 2144,
+      "sha256": "cbf17f7903f2673b6c9ac10421f4904fe0e922dc905356e86cba77953ae2548a"
+    },
+    {
+      "path": "pmmaster/docs/设计原则.md",
+      "bytes": 2511,
+      "sha256": "04baff6d125ba5215ad428ad70e1d2d9493a33c68c899b09323fc92485d3702a"
+    },
+    {
+      "path": "pmmaster/docs/飞书母版与智能体驱动.md",
+      "bytes": 3353,
+      "sha256": "5a35ba5650bda1178dd5917df02e31edd0032a68bf20654832e5a1e563982fb2"
+    },
+    {
+      "path": "pmmaster/docs/飞书母版变更同步记录.md",
+      "bytes": 6798,
+      "sha256": "e95d6f500929e792c56b323ee0dc251b1c1b00cdb8c2c38912f518c2b236ccae"
+    },
+    {
+      "path": "pmmaster/install_weekly_task.ps1",
+      "bytes": 4106,
+      "sha256": "f2a02bee8a81bd983827c0d41958be0a49961cb63c258a9f42fad47c59128eb5"
+    },
+    {
+      "path": "pmmaster/pm_core/__init__.py",
+      "bytes": 64,
+      "sha256": "efab1acd1da318ee3b038a4af0d9eb164ac54d17c7ccf9c6afd73fd74f835524"
+    },
+    {
+      "path": "pmmaster/pm_core/actions.py",
+      "bytes": 17719,
+      "sha256": "7d9b8700bd231228c6fe8a7c170817e11548bd9989d936416dc18b363caa1b04"
+    },
+    {
+      "path": "pmmaster/pm_core/archive.py",
+      "bytes": 28923,
+      "sha256": "530e90b069556728fb01266e76e0f2f87939ec2770825c76e4fad1aea7a72f4b"
+    },
+    {
+      "path": "pmmaster/pm_core/attendance.py",
+      "bytes": 6059,
+      "sha256": "be15270a73f671011d541bf1414ed32285bfb120c7389f5a26f377b969eb6b14"
+    },
+    {
+      "path": "pmmaster/pm_core/calendar.py",
+      "bytes": 17776,
+      "sha256": "042af291fd30a71ac60fc368779515388aadfeab2c65e16d1793c542e5777866"
+    },
+    {
+      "path": "pmmaster/pm_core/cli.py",
+      "bytes": 17024,
+      "sha256": "c8a6245828aa9722042691c9740b3b4787f8e09c0051e51377659c444622e887"
+    },
+    {
+      "path": "pmmaster/pm_core/demo_reports.py",
+      "bytes": 5116,
+      "sha256": "f630424c922a8f4b247f1ef0886b2ecbc875674d156ebe3b88dde987dcae7cbb"
+    },
+    {
+      "path": "pmmaster/pm_core/design_tokens.py",
+      "bytes": 12926,
+      "sha256": "928797fc137e21cca01b1ea7f852efbe74247f8ccf7c3ab9fbc5519bd694c038"
+    },
+    {
+      "path": "pmmaster/pm_core/excel_io.py",
+      "bytes": 61459,
+      "sha256": "6b25ff308e93574ebdc9f1f298a530745a869d07d09a6d4d1fc8f5c30c599371"
+    },
+    {
+      "path": "pmmaster/pm_core/feishu.py",
+      "bytes": 23084,
+      "sha256": "459f3dcadd535c250c1407046bdceed343026ec54870cd01b293c2a7ccd5b813"
+    },
+    {
+      "path": "pmmaster/pm_core/fixtures.py",
+      "bytes": 23352,
+      "sha256": "1119d9b982b86570b9c424c31cca69411a74f9e687409e6d51ebfb09a76961b1"
+    },
+    {
+      "path": "pmmaster/pm_core/foundation_validation.py",
+      "bytes": 8999,
+      "sha256": "21b05d657c4e58341ef1afc25c03539ddbfc59026920faaca7cbd7d0d140cefa"
+    },
+    {
+      "path": "pmmaster/pm_core/integration_cli.py",
+      "bytes": 16067,
+      "sha256": "444fb098961b79d86994cb429503c24fc126f02ad2de391826bd28a071f84b68"
+    },
+    {
+      "path": "pmmaster/pm_core/management_text.py",
+      "bytes": 14230,
+      "sha256": "705efdd8f9a26eb0fa555d50a4db436b6f295d19cbc32391fe451941b2834ac2"
+    },
+    {
+      "path": "pmmaster/pm_core/operating.py",
+      "bytes": 39710,
+      "sha256": "71e078291a772f0472841c31eb74acaa3492f9daa6ec9d746ee06b9a75b764e3"
+    },
+    {
+      "path": "pmmaster/pm_core/project_calendar.py",
+      "bytes": 5925,
+      "sha256": "fe83018d8a838c644962c3743b3215fca0263533767e5e43b73dad88dfe8cb35"
+    },
+    {
+      "path": "pmmaster/pm_core/project_report.py",
+      "bytes": 81391,
+      "sha256": "b1585ea5ef66ec4d2f902159111cd4c39632ae986f68e311722122f5a50edc6f"
+    },
+    {
+      "path": "pmmaster/pm_core/reports.py",
+      "bytes": 14385,
+      "sha256": "60d385264569faf72e820292be5d892ecb62d5e259dcc8fc2fc7dd8ae00389af"
+    },
+    {
+      "path": "pmmaster/pm_core/resources.py",
+      "bytes": 1434,
+      "sha256": "c50da27152eeff40049bf84be57e1976a70e1688dfe69eb0a34fe80803ae029f"
+    },
+    {
+      "path": "pmmaster/pm_core/runtime.py",
+      "bytes": 13469,
+      "sha256": "e6664100ee54f59b3f1d57c5d0d3f9ad68d5207e08f5f429fc93b22f746ed8bd"
+    },
+    {
+      "path": "pmmaster/pm_core/schedule_audit.py",
+      "bytes": 21943,
+      "sha256": "0a274bb3f9a5490f2d3d26e7a9c24aa85fd5f39354ae20c0f0a62967715832da"
+    },
+    {
+      "path": "pmmaster/pm_core/schedule_history.py",
+      "bytes": 6722,
+      "sha256": "cc87c97f262f923fb19415d6ee37ae61e0a78603008002808167411a7b3cb531"
+    },
+    {
+      "path": "pmmaster/pm_core/schema.py",
+      "bytes": 37405,
+      "sha256": "4ebef9be8343a12dd3b6fe5c7fe27eda14fb29ab0945d15aa429503d959463b7"
+    },
+    {
+      "path": "pmmaster/pm_core/store.py",
+      "bytes": 48417,
+      "sha256": "08035ef18852a1ee0d1016718664804fc38105f47eca58a68f7ed30ae48b6876"
+    },
+    {
+      "path": "pmmaster/pm_core/tracking.py",
+      "bytes": 10449,
+      "sha256": "a3025ffbd875c6b30f4dde66e9737f9fdb5816257f78bc8e415f7260f302a0fb"
+    },
+    {
+      "path": "pmmaster/pm_core/weekly.py",
+      "bytes": 41208,
+      "sha256": "942788f32f342375e5d412552f6d8db544d96d0bc5e0cebab846734047d39a47"
+    },
+    {
+      "path": "pmmaster/pmmaster_导出说明.md",
+      "bytes": 3865,
+      "sha256": "617f94f8d9f290d00020bb3d5ce675eff5d4bb3bc98f4eaa010589144bd9e0fe"
+    },
+    {
+      "path": "pmmaster/references/examples/README.md",
+      "bytes": 1734,
+      "sha256": "8be29984f34e31c947e750ff5495f5c151c33933587a1c2964b5e6d0d88a7fa7"
+    },
+    {
+      "path": "pmmaster/references/examples/booking.json",
+      "bytes": 746,
+      "sha256": "983107b1d761f44db0f0d445433ad07792f75a487763c04912f141b995778a85"
+    },
+    {
+      "path": "pmmaster/references/examples/daily-confirmation.json",
+      "bytes": 369,
+      "sha256": "e7aaeffdcc00935448b138a84aed9b99093e199aa2a8a036e1102865e70f5914"
+    },
+    {
+      "path": "pmmaster/references/examples/excel-config.json",
+      "bytes": 1044,
+      "sha256": "04f49fe3957724c12b48ca15e8492ff9f77035c6d4ba25f6b20fefdbfd29c5e4"
+    },
+    {
+      "path": "pmmaster/references/examples/friday-decision.json",
+      "bytes": 913,
+      "sha256": "0d52c684a4a6af98fb82c71f5413b5ab1e11a12bf2f554c035e4e47fbb7b5035"
+    },
+    {
+      "path": "pmmaster/references/examples/meeting-actions.json",
+      "bytes": 486,
+      "sha256": "29650f711d037217ae864ab272f2eb0ea36be3739415c546a8642ce9cb66d30f"
+    },
+    {
+      "path": "pmmaster/references/examples/weekly-commitment.json",
+      "bytes": 816,
+      "sha256": "a739ae840c1853bffbbc4664a610b5bc73d57c44f32c75161358d559be4e1a13"
+    },
+    {
+      "path": "pmmaster/references/feishu-setup.md",
+      "bytes": 11396,
+      "sha256": "c602b38bd293ea4e32464bbd73b1ae8b2fb736b763dbc64b631a569d0ca874a6"
+    },
+    {
+      "path": "pmmaster/references/meeting-actions.md",
+      "bytes": 5863,
+      "sha256": "e433ba6d00e6394ef6564728234b513bc9386851a34585250354f11aa8438603"
+    },
+    {
+      "path": "pmmaster/references/operating-method.md",
+      "bytes": 5924,
+      "sha256": "ac8324e5d1d2cb915b4f1d5ef6b4852da0294b4768cd7c599dc0544d331bb7a1"
+    },
+    {
+      "path": "pmmaster/references/report-design-tokens.json",
+      "bytes": 17087,
+      "sha256": "e8c5d07d05d9ce6bab6305f04f15882ee223310cee4b3334ee94b43640365d53"
+    },
+    {
+      "path": "pmmaster/requirements.txt",
+      "bytes": 24,
+      "sha256": "c8ab58783b00be2a5b907e0fc6643988fb7c24ef5d527db1cf357993aed4625d"
+    },
+    {
+      "path": "pmmaster/run_demo.bat",
+      "bytes": 186,
+      "sha256": "fc56de5adb466f423897242ea603fb50bc40c03470d9c9601267bba33d5e3393"
+    },
+    {
+      "path": "pmmaster/tests/fixtures/legacy_base_schema.sql",
+      "bytes": 8295,
+      "sha256": "72ee24d54db2aeb6af33749d22df806364cbd43d07ea0617ad0ec95566146b9c"
+    },
+    {
+      "path": "pmmaster/tests/fixtures/legacy_delivery_schema.sql",
+      "bytes": 12513,
+      "sha256": "99c522f9526acf0c4434af2867e6a202c7fa15d10126f75601c518c95fbf434b"
+    },
+    {
+      "path": "pmmaster/tests/test_archive.py",
+      "bytes": 17741,
+      "sha256": "6c9047a9026245b23217c408bf16198af134d4949d36f0db6c5c85570ab4dd46"
+    },
+    {
+      "path": "pmmaster/tests/test_calendar.py",
+      "bytes": 12293,
+      "sha256": "ef6df911de3ccd7c79a587f8c967be87ddc2fe723bed814db98da180966003c0"
+    },
+    {
+      "path": "pmmaster/tests/test_demo_reports.py",
+      "bytes": 3052,
+      "sha256": "7ed48c96f79f2619630688041dd1fd0dd4ed5e84180455b60f8b31a5cf45ab1b"
+    },
+    {
+      "path": "pmmaster/tests/test_design_tokens.py",
+      "bytes": 3618,
+      "sha256": "7a839001828d7d0a3adcd869450b60510c2b2d228765bb222a7b4beeeb889ea4"
+    },
+    {
+      "path": "pmmaster/tests/test_end_to_end.py",
+      "bytes": 5218,
+      "sha256": "5a0e825542f6a3b138254747ce3ea33ca2ef2c61d9ea524c8921d6f6d3eb60f3"
+    },
+    {
+      "path": "pmmaster/tests/test_excel_io.py",
+      "bytes": 26859,
+      "sha256": "647a68bcfbd26fd9a3819d9c5aa72999c2dbaba0d7d5ae9f35329ccbcf400b8a"
+    },
+    {
+      "path": "pmmaster/tests/test_feishu_identity.py",
+      "bytes": 14776,
+      "sha256": "1b158b41f92d8ca9923dfd0c07ee265062e065a9f5133b74f8c65ca47a845cec"
+    },
+    {
+      "path": "pmmaster/tests/test_foundation.py",
+      "bytes": 13996,
+      "sha256": "6ee21f79fff68011338c2cad20aaf697c6142f4a4279cc285e8fd873ebfc0f76"
+    },
+    {
+      "path": "pmmaster/tests/test_integration.py",
+      "bytes": 13359,
+      "sha256": "dae42881a3c4cc7399d4cb7354773841b5d42ea0a1db4b6b4f7184e183d3a071"
+    },
+    {
+      "path": "pmmaster/tests/test_operating.py",
+      "bytes": 14026,
+      "sha256": "bb9cbf7e5d81593c98ff9f07e077461665824f6f232b3df228a583583b347104"
+    },
+    {
+      "path": "pmmaster/tests/test_project_report.py",
+      "bytes": 10843,
+      "sha256": "6d19c994baae3da424c083620f659ca1022f1ed69eec5b6b64057f8549f936af"
+    },
+    {
+      "path": "pmmaster/tests/test_schedule_audit.py",
+      "bytes": 15083,
+      "sha256": "59c91d4cd7ce77cbf7e9d9456d817c2d9eb3275c39a06260403986200f4c6682"
+    },
+    {
+      "path": "pmmaster/tests/test_schedule_history.py",
+      "bytes": 11588,
+      "sha256": "ed25721c93d3e1a906012d26102e045d4de762b936b243b868f57ba8904f4267"
+    },
+    {
+      "path": "pmmaster/tests/test_single_project.py",
+      "bytes": 6101,
+      "sha256": "590cb0983474bc992423043cd1391e2c2b4d5cdaf7b21a650c6469e23fc4ce10"
+    },
+    {
+      "path": "pmmaster/tests/test_store.py",
+      "bytes": 21172,
+      "sha256": "babc76bbd125eef42f86b3461a718d700d887288056e2babc0cb2f4d0c45f658"
+    },
+    {
+      "path": "pmmaster/tests/test_tracking.py",
+      "bytes": 8948,
+      "sha256": "d91bbd6cd9f46ef03522bd242a27cf93b89bf14113e3fc6b08eb0fe10f8c1e18"
+    },
+    {
+      "path": "pmmaster/tests/test_weekly.py",
+      "bytes": 21869,
+      "sha256": "7d317e24fb1b2d0146c4b4ca26a816943f84f91a2fab6c2101dec1b67b9fded5"
+    },
+    {
+      "path": "pmmaster/tests/test_write_conflicts.py",
+      "bytes": 5479,
+      "sha256": "6c507f8b557826925a1bebcba7f588c3d96cc75d843989d801420fe70ae403c1"
+    },
+    {
+      "path": "pmmaster/使用手册.md",
+      "bytes": 8073,
+      "sha256": "6081e23bb8d8b98855f35d31575c5de6cf3109c2961bf8356674a6d66725fb0a"
+    },
+    {
+      "path": "pmmaster/项目管理模板.xlsx",
+      "bytes": 141680,
+      "sha256": "ec2334d5068bf8051fb527e22782b57a2cd2940553fd9e4dfe9f50618227dd53"
+    }
+  ],
+  "build": {
+    "format": "zip",
+    "compression": "deflate-9",
+    "entry_time": "1980-01-01T00:00:00",
+    "entry_mode": "0644",
+    "ordering": "path ascending"
+  },
+  "scope": "Skill sources, template and fictional demos; no real tenant deployment or enabled scheduler.",
+  "sha256": "2b51ea3d63513cf2ab309555a05d9123718a1f3e2515a29d4f18f3680d21387e"
+}

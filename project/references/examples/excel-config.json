@@ -1,0 +1,54 @@
+{
+  "mode": "excel",
+  "enabled": false,
+  "project_id": "PRJ-DEMO",
+  "timezone": "Asia/Shanghai",
+  "allowed_recipients": [
+    "PER-PM",
+    "PER-DEV",
+    "PER-QA",
+    "PER-VENDOR"
+  ],
+  "daily_time": "09:00",
+  "daily_deadline": "10:30",
+  "collection_time": "09:00",
+  "plan_cutoff": "10:30",
+  "result_cutoff": "10:30",
+  "inspection_times": [
+    "10:30",
+    "16:00"
+  ],
+  "quiet_after": "18:00",
+  "max_attempts": 3,
+  "policy": {
+    "allowed_tables": [
+      "wbs",
+      "operations",
+      "registers",
+      "meetings",
+      "deliverables",
+      "weekly_commitments",
+      "daily_confirmations",
+      "leave_plans"
+    ],
+    "allowed_operations": [
+      "query",
+      "create",
+      "update",
+      "delete"
+    ],
+    "decision_makers": [
+      "PER-SP",
+      "PER-PM"
+    ]
+  },
+  "schedule_audit": {
+    "decision_makers": [
+      "PER-SP",
+      "PER-PM"
+    ],
+    "trusted_approval_sources": [],
+    "approved_changes": [],
+    "reviewed_changes": []
+  }
+}

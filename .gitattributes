@@ -1,0 +1,10 @@
+# Preserve reviewed source bytes so release hashes survive checkout on Windows
+# and Unix, regardless of a contributor's core.autocrlf setting.
+* -text
+
+*.zip binary
+*.xlsx binary
+*.sqlite3 binary
+*.png binary
+*.jpg binary
+*.pdf binary

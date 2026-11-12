@@ -1,0 +1,1 @@
+{"actions":[{"id":"demo-action-001","operation":"update","table":"wbs","record_id":"DEMO-TASK-001","values":{"delay_reason":"测试环境尚未就绪","remediation_action":"由环境负责人恢复测试环境并完成连通性验证"},"expected":{"delay_reason":null,"remediation_action":null},"source":{"id":"demo-minutes-001","url":"https://example.invalid/demo-minutes","quote":"测试环境尚未就绪，请环境负责人恢复后验证连通性。","kind":"confirmed_fact"}}]}

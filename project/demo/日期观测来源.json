@@ -1,0 +1,56 @@
+{
+  "fictional": true,
+  "description": "虚构两次读取；不代表 demo 数据库或真实人员改过日期。",
+  "before_observed_at": "2026-11-10T09:00:00Z",
+  "observed_at": "2026-11-11T09:00:00Z",
+  "before": {
+    "projects": [
+      {
+        "id": "PRJ-DATE-EXAMPLE",
+        "name": "日期观测虚构示例",
+        "calendar_id": "CAL-EXAMPLE"
+      }
+    ],
+    "calendars": [
+      {
+        "id": "CAL-EXAMPLE",
+        "timezone": "Asia/Shanghai"
+      }
+    ],
+    "wbs": [
+      {
+        "id": "WI-DATE-EXAMPLE",
+        "project_id": "PRJ-DATE-EXAMPLE",
+        "title": "接口联调（虚构）",
+        "status": "in_progress",
+        "baseline_finish": "2026-11-05",
+        "forecast_finish": "2026-11-12"
+      }
+    ]
+  },
+  "after": {
+    "projects": [
+      {
+        "id": "PRJ-DATE-EXAMPLE",
+        "name": "日期观测虚构示例",
+        "calendar_id": "CAL-EXAMPLE"
+      }
+    ],
+    "calendars": [
+      {
+        "id": "CAL-EXAMPLE",
+        "timezone": "Asia/Shanghai"
+      }
+    ],
+    "wbs": [
+      {
+        "id": "WI-DATE-EXAMPLE",
+        "project_id": "PRJ-DATE-EXAMPLE",
+        "title": "接口联调（虚构）",
+        "status": "in_progress",
+        "baseline_finish": "2026-11-13",
+        "forecast_finish": "2026-11-12"
+      }
+    ]
+  }
+}

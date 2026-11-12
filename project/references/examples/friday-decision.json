@@ -1,0 +1,30 @@
+{
+  "actions": [
+    {
+      "id": "friday-window-decision",
+      "operation": "update",
+      "table": "registers",
+      "record_id": "REG-DEMO-DEC",
+      "values": {
+        "status": "approved",
+        "decision": "虚构：选择周五晚维护窗口，开发和QA按回退清单验证。",
+        "decided_at": "2026-11-13T15:30:00+08:00"
+      },
+      "expected": {
+        "status": "open",
+        "decision": null,
+        "decided_at": null
+      },
+      "source": {
+        "id": "fictional-minutes-20261113",
+        "url": "https://example.invalid/minutes/20261113",
+        "quote": "虚构周五决定：选择周五晚维护窗口，开发和QA按回退清单验证。",
+        "kind": "confirmed_decision"
+      },
+      "approval": {
+        "by": "PER-SP",
+        "evidence": "https://example.invalid/minutes/20261113#decision-window"
+      }
+    }
+  ]
+}

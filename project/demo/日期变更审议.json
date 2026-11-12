@@ -1,0 +1,162 @@
+{
+  "coverage": {
+    "mode": "observations",
+    "complete": false,
+    "limitations": [
+      "仅覆盖所提供的事件或快照；不能据此判断修改人的主观意图。",
+      "操作者文本是来源记录标签，不等于经过认证的身份。",
+      "观察差异仅确定两次读取之间发生变化；observed_at是发现时点，不是实际修改时点。",
+      "观察时点不是实际修改时点；操作者未知，不能从负责人推断。",
+      "两次观察之间修改后又改回原值的过程无法检出。"
+    ],
+    "events_considered": 3,
+    "invalid_events": 0,
+    "future_events_ignored": 0,
+    "missing_timezones": 0,
+    "observations": 2,
+    "source_id": "fictional:date-example",
+    "captured_new_snapshot": true
+  },
+  "signals": [
+    {
+      "key": "schedule-da22c1f29f896cc1dc334993",
+      "table": "wbs",
+      "record_id": "WI-DATE-EXAMPLE",
+      "title": "接口联调（虚构）",
+      "kind": "schedule_change_review",
+      "severity": "high",
+      "original_classification": {
+        "kind": "schedule_change_review",
+        "severity": "high"
+      },
+      "changed_fields": [
+        {
+          "field": "baseline_finish",
+          "before": "2026-11-05",
+          "after": "2026-11-13"
+        }
+      ],
+      "effects": [
+        "planned_date_postponed",
+        "reported_deviation_reduced"
+      ],
+      "actor": null,
+      "actor_verified": false,
+      "recorded_at": null,
+      "evidence": {
+        "event_id": "observation:fictional:date-example:2:wbs:WI-DATE-EXAMPLE",
+        "source": "fictional:date-example",
+        "mode": "observation",
+        "source_kind": "observation",
+        "observed_at": "2026-11-11T09:00:00+00:00",
+        "previous_observed_at": "2026-11-10T09:00:00+00:00",
+        "before_version": null,
+        "after_version": null
+      },
+      "approval": {
+        "status": "not_found",
+        "decision_id": null,
+        "note": "尚无匹配本次修改的批准或纠错依据"
+      },
+      "comparison": {
+        "cutoff": "2026-11-11",
+        "timezone": "Asia/Shanghai",
+        "unit": "calendar_days",
+        "before": {
+          "status": "in_progress",
+          "active": true,
+          "late_days": 6,
+          "late_start_days": null,
+          "finish_basis": "baseline_finish",
+          "start_basis": null,
+          "planned_finish": "2026-11-05",
+          "planned_start": null,
+          "actual_finish": null,
+          "actual_start": null
+        },
+        "after": {
+          "status": "in_progress",
+          "active": true,
+          "late_days": 0,
+          "late_start_days": null,
+          "finish_basis": "baseline_finish",
+          "start_basis": null,
+          "planned_finish": "2026-11-13",
+          "planned_start": null,
+          "actual_finish": null,
+          "actual_start": null
+        },
+        "before_late_days": 6,
+        "after_late_days": 0,
+        "before_late_start_days": null,
+        "after_late_start_days": null,
+        "deviation_reduced": true,
+        "observed_deviation_reduced": true,
+        "existing_date_edits_only": {
+          "status": "in_progress",
+          "active": true,
+          "late_days": 0,
+          "late_start_days": null,
+          "finish_basis": "baseline_finish",
+          "start_basis": null,
+          "planned_finish": "2026-11-13",
+          "planned_start": null,
+          "actual_finish": null,
+          "actual_start": null
+        }
+      },
+      "first_actual_review": [],
+      "next_action": "核对修改原因、真实完成证据及本次批准范围；保留原日期和历史偏差。"
+    }
+  ],
+  "original_commitments": [
+    {
+      "table": "wbs",
+      "record_id": "WI-DATE-EXAMPLE",
+      "title": "接口联调（虚构）",
+      "basis": "首次在提供的历史中观察到；不保证覆盖立项以来全部历史",
+      "first_observed_at": "2026-11-10T09:00:00+00:00",
+      "original_baseline_finish": "2026-11-05",
+      "current_record_present": true,
+      "current_baseline_finish": "2026-11-13",
+      "original_commitment_comparison": {
+        "status": "in_progress",
+        "active": true,
+        "late_days": 6,
+        "late_start_days": null,
+        "finish_basis": "baseline_finish",
+        "start_basis": null,
+        "planned_finish": "2026-11-05",
+        "planned_start": null,
+        "actual_finish": null,
+        "actual_start": null
+      },
+      "current_comparison": {
+        "status": "in_progress",
+        "active": true,
+        "late_days": 0,
+        "late_start_days": null,
+        "finish_basis": "baseline_finish",
+        "start_basis": null,
+        "planned_finish": "2026-11-13",
+        "planned_start": null,
+        "actual_finish": null,
+        "actual_start": null
+      },
+      "first_reported_comparison": {
+        "status": "in_progress",
+        "active": true,
+        "late_days": 6,
+        "late_start_days": null,
+        "finish_basis": "baseline_finish",
+        "start_basis": null,
+        "planned_finish": "2026-11-05",
+        "planned_start": null,
+        "actual_finish": null,
+        "actual_start": null
+      }
+    }
+  ],
+  "alert_count": 1,
+  "as_of": "2026-11-11T09:00:00+00:00"
+}

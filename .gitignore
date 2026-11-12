@@ -1,0 +1,57 @@
+# Python / local dependencies
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+
+# Credentials and real project/runtime data
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credential*.json
+secret*.json
+workspace/
+/project/demo_run/
+*.db
+*.sqlite
+*.sqlite3
+!project/demo/demo.sqlite3
+*-wal
+*-shm
+*.log
+*.tmp
+*.bak
+*.backup*
+~$*
+
+# Local task traces, source backups and user-specific agent configuration
+/.trellis/tasks/
+/.trellis/workspace/
+/.trellis/.runtime/
+/.trellis/.developer
+/.trellis/.template-hashes.json
+/.claude/
+/.codebuddy/
+/.codex/
+/.cursor/
+/.opencode/
+/.qoder/
+/.vscode/
+
+# Original imported material and previous release; retain locally
+/doc/
+/release/pmmaster-skill-v7-20261111.zip
+/release/pmmaster-skill-v7-20261111.manifest.json
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
