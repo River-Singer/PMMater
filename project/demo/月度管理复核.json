@@ -5,6 +5,2048 @@
   "period": "month",
   "period_start": "2026-11-01",
   "period_end": "2026-11-11",
+  "workflow": {
+    "project_id": "PRJ-DEMO",
+    "as_of": "2026-11-11T09:00:00+00:00",
+    "timezone": "Asia/Shanghai",
+    "summary": {
+      "total": 10,
+      "done": 2,
+      "open": 8,
+      "missing_data": 8,
+      "awaiting_feedback": 0,
+      "ready": 0,
+      "blocked": 1,
+      "overdue": 6,
+      "resource_constraints": 12,
+      "operations_resource_constraints": 0
+    },
+    "tasks": [
+      {
+        "id": "WI-001",
+        "title": "需求范围确认",
+        "owner_id": "PER-BA",
+        "owner_name": "周宁",
+        "status": "done",
+        "source_url": null,
+        "readiness": "closed",
+        "readiness_label": "已完成",
+        "missing_fields": [],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [],
+        "delay_state": "on_track",
+        "forecast_finish": "2026-11-03",
+        "impact": {
+          "task_ids": [
+            "WI-001"
+          ],
+          "affected_leaf_ids": [],
+          "dependency_leaf_ids": [
+            "WI-002-2",
+            "WI-002-3",
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-REQ",
+              "title": "确认的业务范围",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-001",
+              "from_id": "WI-001",
+              "to_id": "WI-002",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            },
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            },
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-001",
+              "title": "需求与业务规则确认版",
+              "acceptance_status": "accepted",
+              "work_item_id": "WI-001"
+            },
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "当前未发现该任务的进度风险信号；保留交付关联供后续影响评估。",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-002-1",
+        "title": "订单接口字段映射确认",
+        "owner_id": "PER-DEV",
+        "owner_name": "吴桐",
+        "status": "done",
+        "source_url": null,
+        "readiness": "closed",
+        "readiness_label": "已完成",
+        "missing_fields": [],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [],
+        "delay_state": "on_track",
+        "forecast_finish": "2026-11-05",
+        "impact": {
+          "task_ids": [
+            "WI-002-1"
+          ],
+          "affected_leaf_ids": [],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "当前未发现该任务的进度风险信号；保留交付关联供后续影响评估。",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-002-2",
+        "title": "对账回调异常重试实现",
+        "owner_id": "PER-DEV",
+        "owner_name": "吴桐",
+        "status": "in_progress",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": true,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "进展待维护或确认已过期",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-09",
+        "impact": {
+          "task_ids": [
+            "WI-002-2"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-2"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-002-3",
+        "title": "采购接口验收用例复核",
+        "owner_id": "PER-QA",
+        "owner_name": "杨琪",
+        "status": "ready",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": true,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "进展待维护或确认已过期",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-08",
+        "impact": {
+          "task_ids": [
+            "WI-002-3"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-3"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-003",
+        "title": "验收场景缺陷修复",
+        "owner_id": "PER-DEV",
+        "owner_name": "吴桐",
+        "status": "blocked",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description"
+        ],
+        "feedback": {
+          "state": "owner_responded",
+          "label": "负责人本人已反馈",
+          "at": "2026-11-11T09:00:00+08:00",
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "任务受阻：供应商测试数据不完整",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-09",
+        "impact": {
+          "task_ids": [
+            "WI-003"
+          ],
+          "affected_leaf_ids": [
+            "WI-003"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-004",
+        "title": "业务验收确认",
+        "owner_id": "PER-BA",
+        "owner_name": "周宁",
+        "status": "ready",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "任务存在延期风险"
+        ],
+        "delay_state": "risk",
+        "forecast_finish": "2026-11-23",
+        "impact": {
+          "task_ids": [
+            "WI-004"
+          ],
+          "affected_leaf_ids": [
+            "WI-004"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [
+            {
+              "task_id": "WI-004",
+              "target_id": "PRJ-DEMO",
+              "title": "采购协同升级（虚构示例）",
+              "comparison_date": "2026-11-20",
+              "forecast_finish": "2026-11-23"
+            }
+          ],
+          "project_assessment": "已有子项预测超出项目原计划完成日，需复核交付安排",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-005",
+        "title": "导出中文编码缺陷修复",
+        "owner_id": "PER-DEV",
+        "owner_name": "吴桐",
+        "status": "in_progress",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": true,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "进展待维护或确认已过期",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-06",
+        "impact": {
+          "task_ids": [
+            "WI-005"
+          ],
+          "affected_leaf_ids": [
+            "WI-005"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-006",
+        "title": "筛选条件体验优化",
+        "owner_id": null,
+        "owner_name": null,
+        "status": "intake",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "acceptance_criteria",
+          "owner_id",
+          "forecast_start",
+          "forecast_finish",
+          "acceptor_id"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈"
+        ],
+        "delay_state": "unknown",
+        "forecast_finish": null,
+        "impact": {
+          "task_ids": [
+            "WI-006"
+          ],
+          "affected_leaf_ids": [
+            "WI-006"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-007",
+        "title": "采购对账接口异常复核",
+        "owner_id": "PER-DEV",
+        "owner_name": "吴桐",
+        "status": "in_review",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description",
+          "forecast_start"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": true,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "进展待维护或确认已过期",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-05",
+        "impact": {
+          "task_ids": [
+            "WI-007"
+          ],
+          "affected_leaf_ids": [
+            "WI-007"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "WI-008",
+        "title": "确认下周业务验收参与时间",
+        "owner_id": "PER-PM",
+        "owner_name": "陈越",
+        "status": "ready",
+        "source_url": null,
+        "readiness": "missing_data",
+        "readiness_label": "资料待补",
+        "missing_fields": [
+          "description",
+          "forecast_start"
+        ],
+        "feedback": {
+          "state": "pending",
+          "label": "承接待确认",
+          "at": null,
+          "reason": "现有进度反馈不等同于独立接单事件；需确认当前计划与责任。"
+        },
+        "progress_stale": false,
+        "signals": [
+          "资料未齐，不计为已就绪",
+          "尚无当前负责人本人有效反馈",
+          "已超过任务对照完成日"
+        ],
+        "delay_state": "overdue",
+        "forecast_finish": "2026-11-06",
+        "impact": {
+          "task_ids": [
+            "WI-008"
+          ],
+          "affected_leaf_ids": [
+            "WI-008"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      }
+    ],
+    "parents": [
+      {
+        "id": "WBS-BUILD",
+        "title": "可验证的配置与接口",
+        "status": "in_progress",
+        "owner_id": "PER-DEV",
+        "leaf_ids": [
+          "WI-002-1",
+          "WI-002-2",
+          "WI-002-3",
+          "WI-003",
+          "WI-005",
+          "WI-006",
+          "WI-007"
+        ],
+        "counts": {
+          "total": 7,
+          "done": 1,
+          "open": 6,
+          "missing_data": 6,
+          "awaiting_feedback": 0,
+          "ready": 0,
+          "blocked": 1,
+          "overdue": 5
+        },
+        "inconsistent_completion": false
+      },
+      {
+        "id": "WBS-REQ",
+        "title": "确认的业务范围",
+        "status": "done",
+        "owner_id": "PER-BA",
+        "leaf_ids": [
+          "WI-001"
+        ],
+        "counts": {
+          "total": 1,
+          "done": 1,
+          "open": 0,
+          "missing_data": 0,
+          "awaiting_feedback": 0,
+          "ready": 0,
+          "blocked": 0,
+          "overdue": 0
+        },
+        "inconsistent_completion": false
+      },
+      {
+        "id": "WBS-ROOT",
+        "title": "采购协同能力",
+        "status": "in_progress",
+        "owner_id": "PER-PM",
+        "leaf_ids": [
+          "WI-001",
+          "WI-002-1",
+          "WI-002-2",
+          "WI-002-3",
+          "WI-003",
+          "WI-004",
+          "WI-005",
+          "WI-006",
+          "WI-007",
+          "WI-008"
+        ],
+        "counts": {
+          "total": 10,
+          "done": 2,
+          "open": 8,
+          "missing_data": 8,
+          "awaiting_feedback": 0,
+          "ready": 0,
+          "blocked": 1,
+          "overdue": 6
+        },
+        "inconsistent_completion": false
+      },
+      {
+        "id": "WBS-UAT",
+        "title": "业务验收与移交",
+        "status": "ready",
+        "owner_id": "PER-BA",
+        "leaf_ids": [
+          "WI-004",
+          "WI-008"
+        ],
+        "counts": {
+          "total": 2,
+          "done": 0,
+          "open": 2,
+          "missing_data": 2,
+          "awaiting_feedback": 0,
+          "ready": 0,
+          "blocked": 0,
+          "overdue": 1
+        },
+        "inconsistent_completion": false
+      },
+      {
+        "id": "WI-002",
+        "title": "配置与接口验证",
+        "status": "in_progress",
+        "owner_id": "PER-DEV",
+        "leaf_ids": [
+          "WI-002-1",
+          "WI-002-2",
+          "WI-002-3"
+        ],
+        "counts": {
+          "total": 3,
+          "done": 1,
+          "open": 2,
+          "missing_data": 2,
+          "awaiting_feedback": 0,
+          "ready": 0,
+          "blocked": 0,
+          "overdue": 2
+        },
+        "inconsistent_completion": false
+      }
+    ],
+    "constraints": [
+      {
+        "id": "interfaces:API-001:interface",
+        "kind": "interface",
+        "title": "采购订单同步",
+        "source_table": "interfaces",
+        "source_id": "API-001",
+        "source_url": "https://example.invalid/project/interface-spec",
+        "owner_id": "PER-DEV",
+        "work_item_ids": [
+          "WI-002"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "接口尚未就绪；预计就绪 2026-11-12，最晚需用时点待确认。",
+        "deadline": null,
+        "deadline_basis": null,
+        "next_action": "确认接口消费节点、最晚需用时间、交付承诺与替代/模拟方案。",
+        "required_fields": [
+          "expected_ready",
+          "work_item_id",
+          "notes"
+        ],
+        "assessment": "risk",
+        "evidence": {
+          "status": "developing",
+          "expected_ready": "2026-11-12",
+          "work_item_id": "WI-002",
+          "operation_id": null,
+          "owner_id": "PER-DEV",
+          "counterparty_id": "PER-VENDOR",
+          "notes": null,
+          "spec_url": "https://example.invalid/project/interface-spec"
+        },
+        "limitations": [
+          "关联任务可能是接口开发任务本身，不能假定接口必须在该任务开始前就绪。",
+          "预计就绪日不等于最晚需用时间；未计算关键路径或项目延期天数。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-002"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-2",
+            "WI-002-3"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "interfaces:API-002:interface",
+        "kind": "interface",
+        "title": "对账结果回传",
+        "source_table": "interfaces",
+        "source_id": "API-002",
+        "source_url": null,
+        "owner_id": "PER-DEV",
+        "work_item_ids": [
+          "WI-007"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "接口尚未就绪；预计就绪 2026-11-06，最晚需用时点待确认。",
+        "deadline": null,
+        "deadline_basis": null,
+        "next_action": "确认接口消费节点、最晚需用时间、交付承诺与替代/模拟方案。",
+        "required_fields": [
+          "expected_ready",
+          "work_item_id",
+          "notes"
+        ],
+        "assessment": "risk",
+        "evidence": {
+          "status": "testing",
+          "expected_ready": "2026-11-06",
+          "work_item_id": "WI-007",
+          "operation_id": null,
+          "owner_id": "PER-DEV",
+          "counterparty_id": "PER-VENDOR",
+          "notes": "P0复核完成后由业务确认。",
+          "spec_url": null
+        },
+        "limitations": [
+          "关联任务可能是接口开发任务本身，不能假定接口必须在该任务开始前就绪。",
+          "预计就绪日不等于最晚需用时间；未计算关键路径或项目延期天数。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-007"
+          ],
+          "affected_leaf_ids": [
+            "WI-007"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "interfaces:API-003:interface",
+        "kind": "interface",
+        "title": "历史采购数据交换",
+        "source_table": "interfaces",
+        "source_id": "API-003",
+        "source_url": null,
+        "owner_id": "PER-DEV",
+        "work_item_ids": [
+          "WI-003"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "接口尚未就绪；预计就绪 2026-11-09，最晚需用时点待确认。",
+        "deadline": null,
+        "deadline_basis": null,
+        "next_action": "确认接口消费节点、最晚需用时间、交付承诺与替代/模拟方案。",
+        "required_fields": [
+          "expected_ready",
+          "work_item_id",
+          "notes"
+        ],
+        "assessment": "risk",
+        "evidence": {
+          "status": "blocked",
+          "expected_ready": "2026-11-09",
+          "work_item_id": "WI-003",
+          "operation_id": null,
+          "owner_id": "PER-DEV",
+          "counterparty_id": "PER-VENDOR",
+          "notes": "关联供应商数据缺失提醒。",
+          "spec_url": null
+        },
+        "limitations": [
+          "关联任务可能是接口开发任务本身，不能假定接口必须在该任务开始前就绪。",
+          "预计就绪日不等于最晚需用时间；未计算关键路径或项目延期天数。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-003"
+          ],
+          "affected_leaf_ids": [
+            "WI-003"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "leave_plans:LEAVE-DEMO-1:leave",
+        "kind": "leave",
+        "title": "周敏：休假与交接",
+        "source_table": "leave_plans",
+        "source_id": "LEAVE-DEMO-1",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [
+          "WI-003"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "休假计划尚待确认；未确认与任务的时间重叠，需核对剩余计划和交接。",
+        "deadline": null,
+        "deadline_basis": "休假窗口见来源事实；最晚交接承诺待PM确认",
+        "next_action": "核实受影响任务的剩余工作、替补容量及交接承诺，决定调序或调整预测。",
+        "required_fields": [
+          "backup_id",
+          "impact"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "person_id": "PER-VENDOR",
+          "start_date": "2026-11-18",
+          "start_period": "PM",
+          "end_date": "2026-11-18",
+          "end_period": "PM",
+          "status": "proposed",
+          "confirmed_at": null,
+          "backup_id": "PER-DEV",
+          "impact": null,
+          "source": "fictional:leave-intent",
+          "task_timing": {
+            "WI-003": "timing_unknown"
+          }
+        },
+        "limitations": [
+          "交接人字段只表示人选，不证明已承接且有可用容量。",
+          "仅比较日期范围；保留半日事实，不把半日休假放大为全天损失。",
+          "未提供任务级工时，不能将休假直接换算为延期天数。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-003"
+          ],
+          "affected_leaf_ids": [
+            "WI-003"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "registers:REG-001:register",
+        "kind": "register",
+        "title": "供应商数据缺失",
+        "source_table": "registers",
+        "source_id": "REG-001",
+        "source_url": null,
+        "owner_id": "PER-DEV",
+        "work_item_ids": [
+          "WI-003"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "开放事项尚未关闭，需核对所需条件或物资是否落实。",
+        "deadline": "2026-11-06T16:00:00+08:00",
+        "deadline_basis": "登记的最迟处理时间",
+        "next_action": "补齐任务关联、资源落实/到货期限、责任人及验证依据；有实质阻碍再登记受阻事实。",
+        "required_fields": [
+          "next_action",
+          "closure_evidence"
+        ],
+        "assessment": "risk",
+        "evidence": {
+          "kind": "issue",
+          "status": "open",
+          "impact": "推迟缺陷确认及验收准备",
+          "proposal": "供应商确认补齐安排后重估预测",
+          "next_action": null,
+          "decision": null,
+          "decided_at": null,
+          "closure_evidence": null,
+          "work_item_id": "WI-003",
+          "operation_id": null
+        },
+        "limitations": [
+          "开放登记不自动等于硬阻塞；物资等条件按明确登记事实评估，不按标题关键词推断。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-003"
+          ],
+          "affected_leaf_ids": [
+            "WI-003"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "registers:REG-002:decision",
+        "kind": "decision",
+        "title": "P0异常复核与接口开发顺序确认",
+        "source_table": "registers",
+        "source_id": "REG-002",
+        "source_url": null,
+        "owner_id": "PER-SP",
+        "work_item_ids": [
+          "WI-007"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "决定结论尚未落实或依据不完整。",
+        "deadline": "2026-11-05T16:00:00+08:00",
+        "deadline_basis": "登记的最迟处理时间",
+        "next_action": "业务确认P0结果，PO确认剩余开发安排。",
+        "required_fields": [
+          "decision",
+          "decided_at"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "kind": "decision",
+          "status": "open",
+          "impact": "同一项目的P0复核与接口开发占用同一负责人，需要明确本周顺序。",
+          "proposal": null,
+          "next_action": "业务确认P0结果，PO确认剩余开发安排。",
+          "decision": null,
+          "decided_at": null,
+          "closure_evidence": null,
+          "work_item_id": "WI-007",
+          "operation_id": null
+        },
+        "limitations": [
+          "开放登记不自动等于硬阻塞；物资等条件按明确登记事实评估，不按标题关键词推断。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-007"
+          ],
+          "affected_leaf_ids": [
+            "WI-007"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "registers:REG-003:register",
+        "kind": "register",
+        "title": "业务验收窗口尚未锁定",
+        "source_table": "registers",
+        "source_id": "REG-003",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [
+          "WI-004"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "开放事项尚未关闭，需核对所需条件或物资是否落实。",
+        "deadline": "2026-11-06T14:00:00+08:00",
+        "deadline_basis": "登记的最迟处理时间",
+        "next_action": "与业务确认验收参与人及可用时间。",
+        "required_fields": [
+          "next_action",
+          "closure_evidence"
+        ],
+        "assessment": "risk",
+        "evidence": {
+          "kind": "risk",
+          "status": "open",
+          "impact": "可能影响11月23日的验收安排。",
+          "proposal": null,
+          "next_action": "与业务确认验收参与人及可用时间。",
+          "decision": null,
+          "decided_at": null,
+          "closure_evidence": null,
+          "work_item_id": "WI-004",
+          "operation_id": null
+        },
+        "limitations": [
+          "开放登记不自动等于硬阻塞；物资等条件按明确登记事实评估，不按标题关键词推断。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-004"
+          ],
+          "affected_leaf_ids": [
+            "WI-004"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [
+            {
+              "task_id": "WI-004",
+              "target_id": "PRJ-DEMO",
+              "title": "采购协同升级（虚构示例）",
+              "comparison_date": "2026-11-20",
+              "forecast_finish": "2026-11-23"
+            }
+          ],
+          "project_assessment": "已有子项预测超出项目原计划完成日，需复核交付安排",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "registers:REG-004:register",
+        "kind": "register",
+        "title": "归档本周接口说明与会议纪要",
+        "source_table": "registers",
+        "source_id": "REG-004",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "开放事项尚未关闭，需核对所需条件或物资是否落实。",
+        "deadline": "2026-11-06T17:00:00+08:00",
+        "deadline_basis": "登记的最迟处理时间",
+        "next_action": "补齐项目文档链接与文档维护人。",
+        "required_fields": [
+          "next_action",
+          "closure_evidence"
+        ],
+        "assessment": "needs_mapping",
+        "evidence": {
+          "kind": "reminder",
+          "status": "open",
+          "impact": null,
+          "proposal": null,
+          "next_action": "补齐项目文档链接与文档维护人。",
+          "decision": null,
+          "decided_at": null,
+          "closure_evidence": null,
+          "work_item_id": null,
+          "operation_id": null
+        },
+        "limitations": [
+          "开放登记不自动等于硬阻塞；物资等条件按明确登记事实评估，不按标题关键词推断。",
+          "尚未定位到未关闭项目任务；不能认定影响全部任务。"
+        ],
+        "impact": {
+          "task_ids": [],
+          "affected_leaf_ids": [],
+          "dependency_leaf_ids": [],
+          "ancestors": [],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "影响范围待定位，不能将缺口自动分摊给全部任务",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "registers:REG-DEMO-DEC:decision",
+        "kind": "decision",
+        "title": "选择测试维护窗口（虚构待审议）",
+        "source_table": "registers",
+        "source_id": "REG-DEMO-DEC",
+        "source_url": null,
+        "owner_id": "PER-SP",
+        "work_item_ids": [
+          "WI-002"
+        ],
+        "scope": "project",
+        "operation_ids": [
+          "OPS-DEMO-1"
+        ],
+        "reason": "决定结论尚未落实或依据不完整。",
+        "deadline": "2026-11-13T15:00:00+08:00",
+        "deadline_basis": "登记的最迟处理时间",
+        "next_action": "周五会审议窗口及值守安排",
+        "required_fields": [
+          "decision",
+          "decided_at"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "kind": "decision",
+          "status": "open",
+          "impact": "请评估维护配合与验收窗口冲突",
+          "proposal": "方案A：周五晚安排2小时窗口，增加值守；方案B：下周一午间处理，验收材料延后提交。",
+          "next_action": "周五会审议窗口及值守安排",
+          "decision": null,
+          "decided_at": null,
+          "closure_evidence": null,
+          "work_item_id": null,
+          "operation_id": "OPS-DEMO-1"
+        },
+        "limitations": [
+          "开放登记不自动等于硬阻塞；物资等条件按明确登记事实评估，不按标题关键词推断。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-002"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-2",
+            "WI-002-3"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "resource_weeks:missing:PER-DEV:2026-11-09:capacity_unknown",
+        "kind": "capacity_unknown",
+        "title": "吴桐：本周容量依据缺失",
+        "source_table": "resource_weeks",
+        "source_id": "missing:PER-DEV:2026-11-09",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [
+          "WI-002",
+          "WI-002-2",
+          "WI-002-3",
+          "WI-003",
+          "WI-005",
+          "WI-007"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "未找到已分配成员本周的资源记录；不能据此假设全勤或满额可用。",
+        "deadline": null,
+        "deadline_basis": "待PM确认最晚落实时间",
+        "next_action": "由PM核实任务所需资源及已确认可用量；员工免例行资源催填，不能因此推定可用。",
+        "required_fields": [
+          "resource_weeks.net_available_hours"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "person_id": "PER-DEV",
+          "week_start": "2026-11-09",
+          "record_exists": false,
+          "person_type": "employee",
+          "task_timing": {
+            "WI-002": "overlap",
+            "WI-002-2": "timing_unknown",
+            "WI-002-3": "timing_unknown",
+            "WI-003": "timing_unknown",
+            "WI-005": "timing_unknown",
+            "WI-007": "timing_unknown"
+          }
+        },
+        "limitations": [
+          "仅有人员/项目容量，没有逐任务所需工时，不能推算具体任务延期天数。",
+          "净可用量已扣除外部占用或休假时，不重复扣减。",
+          "这是一项覆盖缺口，没有虚构资源记录；仅核对当周，未来容量另需复核。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-002",
+            "WI-002-2",
+            "WI-002-3",
+            "WI-003",
+            "WI-005",
+            "WI-007"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-2",
+            "WI-002-3",
+            "WI-003",
+            "WI-005",
+            "WI-007"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            },
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            },
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            },
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "resource_weeks:missing:PER-PM:2026-11-09:capacity_unknown",
+        "kind": "capacity_unknown",
+        "title": "陈越：本周容量依据缺失",
+        "source_table": "resource_weeks",
+        "source_id": "missing:PER-PM:2026-11-09",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [
+          "WI-008"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "未找到已分配成员本周的资源记录；不能据此假设全勤或满额可用。",
+        "deadline": null,
+        "deadline_basis": "待PM确认最晚落实时间",
+        "next_action": "由PM核实任务所需资源及已确认可用量；员工免例行资源催填，不能因此推定可用。",
+        "required_fields": [
+          "resource_weeks.net_available_hours"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "person_id": "PER-PM",
+          "week_start": "2026-11-09",
+          "record_exists": false,
+          "person_type": "employee",
+          "task_timing": {
+            "WI-008": "timing_unknown"
+          }
+        },
+        "limitations": [
+          "仅有人员/项目容量，没有逐任务所需工时，不能推算具体任务延期天数。",
+          "净可用量已扣除外部占用或休假时，不重复扣减。",
+          "这是一项覆盖缺口，没有虚构资源记录；仅核对当周，未来容量另需复核。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-008"
+          ],
+          "affected_leaf_ids": [
+            "WI-008"
+          ],
+          "dependency_leaf_ids": [],
+          "ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "successors": [],
+          "dependency_edges": [],
+          "downstream_ancestors": [],
+          "deliverables": [],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      },
+      {
+        "id": "resource_weeks:missing:PER-QA:2026-11-09:capacity_unknown",
+        "kind": "capacity_unknown",
+        "title": "杨琪：本周容量依据缺失",
+        "source_table": "resource_weeks",
+        "source_id": "missing:PER-QA:2026-11-09",
+        "source_url": null,
+        "owner_id": "PER-PM",
+        "work_item_ids": [
+          "WI-002",
+          "WI-002-2",
+          "WI-002-3",
+          "WI-003"
+        ],
+        "scope": "project",
+        "operation_ids": [],
+        "reason": "未找到已分配成员本周的资源记录；不能据此假设全勤或满额可用。",
+        "deadline": null,
+        "deadline_basis": "待PM确认最晚落实时间",
+        "next_action": "由PM核实任务所需资源及已确认可用量；员工免例行资源催填，不能因此推定可用。",
+        "required_fields": [
+          "resource_weeks.net_available_hours"
+        ],
+        "assessment": "pending_confirmation",
+        "evidence": {
+          "person_id": "PER-QA",
+          "week_start": "2026-11-09",
+          "record_exists": false,
+          "person_type": "employee",
+          "task_timing": {
+            "WI-002": "overlap",
+            "WI-002-2": "timing_unknown",
+            "WI-002-3": "timing_unknown",
+            "WI-003": "timing_unknown"
+          }
+        },
+        "limitations": [
+          "仅有人员/项目容量，没有逐任务所需工时，不能推算具体任务延期天数。",
+          "净可用量已扣除外部占用或休假时，不重复扣减。",
+          "这是一项覆盖缺口，没有虚构资源记录；仅核对当周，未来容量另需复核。"
+        ],
+        "impact": {
+          "task_ids": [
+            "WI-002",
+            "WI-002-2",
+            "WI-002-3",
+            "WI-003"
+          ],
+          "affected_leaf_ids": [
+            "WI-002-2",
+            "WI-002-3",
+            "WI-003"
+          ],
+          "dependency_leaf_ids": [
+            "WI-004"
+          ],
+          "ancestors": [
+            {
+              "id": "WBS-BUILD",
+              "title": "可验证的配置与接口",
+              "owner_id": "PER-DEV"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            },
+            {
+              "id": "WI-002",
+              "title": "配置与接口验证",
+              "owner_id": "PER-DEV"
+            }
+          ],
+          "successors": [
+            {
+              "id": "WI-004",
+              "title": "业务验收确认",
+              "owner_id": "PER-BA"
+            }
+          ],
+          "dependency_edges": [
+            {
+              "id": "DEP-002",
+              "from_id": "WI-002",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            },
+            {
+              "id": "DEP-003",
+              "from_id": "WI-003",
+              "to_id": "WI-004",
+              "dependency_type": "FS",
+              "lag_workdays": 0
+            }
+          ],
+          "downstream_ancestors": [
+            {
+              "id": "WBS-UAT",
+              "title": "业务验收与移交",
+              "owner_id": "PER-BA"
+            },
+            {
+              "id": "WBS-ROOT",
+              "title": "采购协同能力",
+              "owner_id": "PER-PM"
+            }
+          ],
+          "deliverables": [
+            {
+              "id": "DEL-002",
+              "title": "接口设计说明待验收版",
+              "acceptance_status": "pending",
+              "work_item_id": "WI-002"
+            },
+            {
+              "id": "DEL-003",
+              "title": "异常场景复测记录",
+              "acceptance_status": "rejected",
+              "work_item_id": "WI-003"
+            }
+          ],
+          "date_evidence": [],
+          "project_assessment": "存在逐级交付风险；是否影响项目完成日及天数待评估",
+          "limitations": [
+            "依赖路径是潜在传导范围，不等于所有任务已受阻；未计算关键路径或延期天数。"
+          ]
+        }
+      }
+    ],
+    "operations_constraints": [],
+    "limitations": [
+      "任务完成占比按唯一有效叶子计数，资料待补仍在分母；不代表工时完成率。",
+      "本人进度反馈仅证明已反馈，不代替正式接单、最新重新指派或计划变更确认。"
+    ]
+  },
   "schedule_audit": {
     "coverage": {
       "mode": "history",
@@ -29,8 +2071,8 @@
         "original_baseline_start": "2026-11-02",
         "original_baseline_finish": "2026-11-20",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-02",
         "current_baseline_finish": "2026-11-20",
+        "current_baseline_start": "2026-11-02",
         "original_commitment_comparison": {
           "status": null,
           "active": true,
@@ -76,11 +2118,11 @@
         "first_observed_at": "2026-11-11T09:00:00+00:00",
         "original_baseline_start": "2026-11-02",
         "original_baseline_finish": "2026-11-03",
-        "first_reported_actual_finish": "2026-11-03",
         "first_reported_actual_start": "2026-11-02",
+        "first_reported_actual_finish": "2026-11-03",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-02",
         "current_baseline_finish": "2026-11-03",
+        "current_baseline_start": "2026-11-02",
         "original_commitment_comparison": {
           "status": "done",
           "active": true,
@@ -128,8 +2170,8 @@
         "original_baseline_finish": "2026-11-11",
         "first_reported_actual_start": "2026-11-04",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-04",
         "current_baseline_finish": "2026-11-11",
+        "current_baseline_start": "2026-11-04",
         "original_commitment_comparison": {
           "status": "in_progress",
           "active": true,
@@ -177,8 +2219,8 @@
         "original_baseline_finish": "2026-11-06",
         "first_reported_actual_start": "2026-11-04",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-04",
         "current_baseline_finish": "2026-11-06",
+        "current_baseline_start": "2026-11-04",
         "original_commitment_comparison": {
           "status": "blocked",
           "active": true,
@@ -225,8 +2267,8 @@
         "original_baseline_start": "2026-11-16",
         "original_baseline_finish": "2026-11-20",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-16",
         "current_baseline_finish": "2026-11-20",
+        "current_baseline_start": "2026-11-16",
         "original_commitment_comparison": {
           "status": "ready",
           "active": true,
@@ -274,8 +2316,8 @@
         "original_baseline_finish": "2026-11-04",
         "first_reported_actual_start": "2026-11-05",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-04",
         "current_baseline_finish": "2026-11-04",
+        "current_baseline_start": "2026-11-04",
         "original_commitment_comparison": {
           "status": "in_progress",
           "active": true,
@@ -321,11 +2363,11 @@
         "first_observed_at": "2026-11-11T09:00:00+00:00",
         "original_baseline_start": "2026-11-04",
         "original_baseline_finish": "2026-11-05",
-        "first_reported_actual_finish": "2026-11-05",
         "first_reported_actual_start": "2026-11-04",
+        "first_reported_actual_finish": "2026-11-05",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-04",
         "current_baseline_finish": "2026-11-05",
+        "current_baseline_start": "2026-11-04",
         "original_commitment_comparison": {
           "status": "done",
           "active": true,
@@ -373,8 +2415,8 @@
         "original_baseline_finish": "2026-11-08",
         "first_reported_actual_start": "2026-11-05",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-05",
         "current_baseline_finish": "2026-11-08",
+        "current_baseline_start": "2026-11-05",
         "original_commitment_comparison": {
           "status": "in_progress",
           "active": true,
@@ -421,8 +2463,8 @@
         "original_baseline_start": "2026-11-06",
         "original_baseline_finish": "2026-11-08",
         "current_record_present": true,
-        "current_baseline_start": "2026-11-06",
         "current_baseline_finish": "2026-11-08",
+        "current_baseline_start": "2026-11-06",
         "original_commitment_comparison": {
           "status": "ready",
           "active": true,

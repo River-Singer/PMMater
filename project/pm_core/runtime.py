@@ -19,11 +19,13 @@ def load_config(path):
     attempts = config.get('max_attempts', 3)
     if isinstance(attempts, bool) or not isinstance(attempts, int) or not 1 <= attempts <= 10:
         raise ValueError('max_attempts must be an integer between 1 and 10')
-    for key in ('daily_time', 'daily_deadline', 'collection_time', 'plan_cutoff', 'result_cutoff', 'quiet_after'):
+    for key in ('daily_time', 'daily_deadline', 'collection_time', 'plan_cutoff', 'result_cutoff', 'quiet_after', 'workflow_time'):
         if config.get(key):
             time.fromisoformat(config[key])
     for value in config.get('inspection_times', ['10:30', '16:00']):
         time.fromisoformat(value)
+    from .group_actions import message_limits
+    message_limits(config)
     if any(k in config for k in ('token', 'access_token', 'app_secret')):
         raise ValueError('Store secrets in the host credential store/environment, not project JSON')
     return config
@@ -32,6 +34,7 @@ def load_config(path):
 def plan_tick(data, config, *, now):
     from .attendance import plan_daily_confirmations
     from .operating import plan_followups
+    from .workflow import plan_workflow_followups
     instant = parse_datetime(now) if isinstance(now, str) else now
     if instant.tzinfo is None:
         raise ValueError('Tick time requires timezone')
@@ -46,7 +49,8 @@ def plan_tick(data, config, *, now):
     people = {r['id']: r for r in data.get('people', [])}
     items = []
     if local.strftime('%H:%M') >= config.get('quiet_after', '18:00'):
-        return {'project_id': config['project_id'], 'date': local.date().isoformat(), 'attendance': attendance, 'recipients': {}}
+        return {'project_id': config['project_id'], 'date': local.date().isoformat(), 'attendance': attendance,
+                'recipients': {}, 'workflow': None, 'pending': []}
     daily_at = config.get('daily_time', '09:00')
     if local.strftime('%H:%M') >= daily_at:
         for r in attendance['eligible']:
@@ -70,14 +74,32 @@ def plan_tick(data, config, *, now):
                 if cutoff and local.strftime('%H:%M') >= cutoff:
                     item = dict(item, kind=item['kind'] + '_followup')
             items.append(item)
-    grouped = {}
+    workflow = plan_workflow_followups(data, now=instant, config=config)
+    routine_tasks = {(i['table'], i['record_id']): i for i in workflow['items']
+                     if i['kind'] == 'workflow_task'}
+    merged = []
     for item in items:
-        person = people.get(item['recipient_id'])
-        if not person or not person.get('active'):
+        routine = routine_tasks.get((item.get('table'), item.get('record_id')))
+        if routine and item['kind'] == 'stale_progress' and 'progress_confirmed_at' in routine['required_fields']:
             continue
-        grouped.setdefault(person['id'], []).append(item)
-    return {'project_id': config['project_id'], 'date': local.date().isoformat(),
-            'attendance': attendance, 'recipients': grouped}
+        if routine and item['kind'] == 'monday_plan':
+            fields = [f for f in item['required_fields'] if f not in routine['required_fields']]
+            if not fields: continue
+            item = dict(item, required_fields=fields)
+        merged.append(item)
+    items = merged
+    items.extend(workflow['items'])
+    from .group_actions import route_item
+    grouped = {}; pending = list(workflow['pending'])
+    for item in items:
+        item = route_item(data, item, day=local.date().isoformat(), require_identity=config.get('mode') == 'feishu')
+        if item.get('routing_status'):
+            pending.append(item)
+            continue
+        grouped.setdefault(item['recipient_id'], []).append(item)
+    return {'project_id': config['project_id'], 'date': local.date().isoformat(), 'as_of': instant.isoformat(),
+            'attendance': attendance, 'recipients': grouped, 'workflow': workflow['review'],
+            'pending': pending}
 
 
 def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, history_provider=None, observer=None):
@@ -96,65 +118,80 @@ def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, h
     plan = plan_tick(data, config, now=now)
     people = {p['id']: p for p in data.get('people', [])}
     results = []
-    from .schema import TABLES
-    labels = {f.name: f.label for meta in TABLES.values() for f in meta['fields']}
-    labels.update({'weekly_commitments.outcome': '本周可验证成果', 'weekly_commitments.due_date': '周成果期限', 'weekly_commitments.verification': '周成果验证方式'})
-    labels['future_leave_change'] = '未来休假有无变化'
-    for person_id, items in plan['recipients'].items():
+    from .group_actions import project_group_actions, action_batches
+    actions = project_group_actions(data, plan, config, now=now)
+    plan['group_actions'] = actions
+    for item in actions['pending']:
+        results.append({'person_id': item.get('responsible_id'), 'status': 'pending_route', 'item': item})
+    for person_id, items in actions['recipients'].items():
         person = people[person_id]
         uid = person.get('feishu_user_id')
-        if not uid or person.get('feishu_id_type', 'open_id') != 'open_id':
+        if not dry_run and (not uid or person.get('feishu_id_type', 'open_id') != 'open_id'):
             results.append({'person_id': person_id, 'status': 'pending_identity'})
             continue
         pending = []
         for item in items:
-            key = ':'.join(('reminder', config['project_id'], plan['date'], person_id,
-                            item['kind'], item.get('table', ''), item.get('record_id', '')))
-            row = next((r for r in data.get(item.get('table'), []) if r['id'] == item.get('record_id')), {})
+            key = ':'.join(('reminder', config['project_id'], plan['date'], person_id, item['id']))
+            row = next((r for r in data.get(item['source']['table'], []) if r['id'] == item['source']['id']), {})
             if row.get('priority') == 'P0' or row.get('impact') == 'critical':
                 key += ':' + digest({k: row.get(k) for k in ('status', 'blocker_reason', 'forecast_finish', 'deadline_at', 'impact')})
             previous = ledger.get(key)
             if previous and previous['status'] in ('succeeded', 'running', 'unknown'):
                 continue
-            pending.append((key, item))
+            pending.append(dict(item, occurrence_key=key))
         if not pending:
             results.append({'person_id': person_id, 'status': 'already_processed'})
             continue
-        message = '\n'.join((i.get('title', '') + '：' if i.get('title') else '') + i['reason'] +
-                '\n需维护：' + '、'.join(labels.get(f, f) for f in i.get('required_fields', [])) +
-                ('；截止：' + str(i['deadline']) if i.get('deadline') else '') for _, i in pending)
-        if dry_run:
-            results.append({'person_id': person_id, 'status': 'preview', 'text': message,
-                            'items': [i for _, i in pending]})
-            continue
-        if not config.get('enabled') or not config.get('chat_id'):
-            results.append({'person_id': person_id, 'status': 'disabled'})
-            continue
-        if person_id not in config.get('allowed_recipients', []):
-            results.append({'person_id': person_id, 'status': 'outside_recipient_scope'})
-            continue
-        claimed = []
-        for key, item in pending:
-            fingerprint = digest({'key': key, 'chat_id': config['chat_id']})
-            state = ledger.claim(key, fingerprint, max_attempts=config.get('max_attempts', 3))
+        for batch in action_batches(pending, config):
+            if dry_run:
+                results.append({'person_id': person_id, 'status': 'preview', 'text': batch['text'], 'items': batch['actions']})
+                continue
+            if not config.get('enabled') or not config.get('chat_id'):
+                results.append({'person_id': person_id, 'status': 'disabled'})
+                break
+            if person_id not in config.get('allowed_recipients', []):
+                results.append({'person_id': person_id, 'status': 'outside_recipient_scope'})
+                break
+            claimed = []
+            for item in batch['actions']:
+                key = item['occurrence_key']
+                fingerprint = digest({'key': key, 'chat_id': config['chat_id']})
+                state = ledger.claim(key, fingerprint, max_attempts=config.get('max_attempts', 3))
+                if state.get('claimed_now'):
+                    claimed.append((item, fingerprint))
+            if not claimed:
+                continue
+            # Re-render the exact claimed subset with the same preview renderer.
+            # Each chunk has its own UUID and durable outcome; never mark unsent
+            # later chunks as successful after a partial delivery.
+            actual = action_batches([i for i, _ in claimed], config)[0]
+            batch_key = 'reminder-batch:' + digest({'keys': [i['occurrence_key'] for i, _ in claimed],
+                                                   'text': actual['text'], 'chat_id': config['chat_id']})
+            batch_fingerprint = digest({'key': batch_key, 'text': actual['text']})
+            state = ledger.claim(batch_key, batch_fingerprint, max_attempts=config.get('max_attempts', 3))
+            detail = {'items': actual['actions'], 'batch_key': batch_key, 'text': actual['text']}
             if state.get('claimed_now'):
-                claimed.append((key, item, state, fingerprint))
-        if not claimed:
-            continue
-        # Rebuild after claims, excluding any occurrence another worker owns.
-        message = '\n'.join((i.get('title', '') + '：' if i.get('title') else '') + i['reason'] +
-                '\n需维护：' + '、'.join(labels.get(f, f) for f in i.get('required_fields', [])) +
-                ('；截止：' + str(i['deadline']) if i.get('deadline') else '') for _, i, _, _ in claimed)
-        try:
-            sent = client.mention(config['chat_id'], uid, message, request_id=claimed[0][2]['request_id'])
-            detail = {'items': [i for _, i, _, _ in claimed], 'message_id': sent.get('message_id')}
-            status = 'succeeded' if detail['message_id'] else 'unknown'
-        except FeishuError as exc:
-            status = 'unknown' if exc.uncertain else 'failed'
-            detail = {'items': [i for _, i, _, _ in claimed], 'error': str(exc)}
-        for key, _, _, fingerprint in claimed:
-            ledger.save(key, fingerprint, status, detail)
-        results.append({'person_id': person_id, 'status': status, 'detail': detail})
+                ledger.save(batch_key, batch_fingerprint, 'running', detail)
+                for item, fingerprint in claimed:
+                    ledger.save(item['occurrence_key'], fingerprint, 'running', {'batch_key': batch_key})
+                try:
+                    sent = client.mention(config['chat_id'], uid, actual['text'], request_id=state['request_id'])
+                    detail['message_id'] = sent.get('message_id')
+                    status = 'succeeded' if detail['message_id'] else 'unknown'
+                except FeishuError as exc:
+                    status = 'unknown' if exc.uncertain else 'failed'
+                    detail['error'] = str(exc)
+                except Exception as exc:
+                    # An unexpected transport failure cannot establish non-delivery.
+                    status = 'unknown'
+                    detail['error'] = str(exc)
+                ledger.save(batch_key, batch_fingerprint, status, detail)
+            else:
+                status = state['status']
+                detail = state['detail']
+            for item, fingerprint in claimed:
+                ledger.save(item['occurrence_key'], fingerprint, status, detail)
+            results.append({'person_id': person_id, 'status': status, 'detail': detail})
     reviews = dispatch_schedule_reviews(data, audit, config, ledger, client, now=now, dry_run=dry_run)
     return {'plan': plan, 'deliveries': results, 'schedule_audit': audit, 'pm_reviews': reviews}
 

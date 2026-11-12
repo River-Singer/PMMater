@@ -236,7 +236,8 @@ def config_template(*, profile='canonical'):
             'pm_private_chat_id': '', 'pm_private_recipient_id': '',
             'schedule_audit': {'decision_makers': [], 'trusted_approval_sources': [], 'approved_changes': [], 'reviewed_changes': []}, 'daily_time': '09:00',
             'daily_deadline': '10:30', 'collection_time': '09:00', 'plan_cutoff': '10:30',
-            'result_cutoff': '10:30', 'inspection_times': ['10:30', '16:00'], 'quiet_after': '18:00',
+            'result_cutoff': '10:30', 'inspection_times': ['10:30', '16:00'], 'workflow_time': '10:00', 'quiet_after': '18:00',
+            'group_max_items': 5, 'group_max_chars': 3500,
             'policy': {'allowed_tables': [t for t in TABLES if t not in ('calendars', 'calendar_days')],
                        'allowed_operations': ['query', 'create', 'update', 'delete', 'book', 'reschedule'],
                        'decision_makers': [], 'calendar_id': '', 'organizer_id': '', 'allowed_attendees': []}}

@@ -1,6 +1,6 @@
 # pmmaster Skill 开发交付
 
-当前交付包为 `pmmaster-skill-v7-20261111-r2.zip`，包含新版 HTML 设计与 2026-11-11 飞书母版规则同步。解压后得到完整的 `pmmaster` 目录。`v7` 表示数据结构版本，`r2` 表示本次修订；相邻 manifest JSON 记录每个文件、源文件集合与整个压缩包的 SHA-256 校验值。
+当前交付包为 `pmmaster-skill-v7-20261111-r3.zip`，包含工作日10点任务就绪巡检、逐级影响、综合资源延期风险及按责任人组织的群跟进行动，HTML 默认展示紧凑摘要并可展开证据，沿用新版样式与飞书母版规则。解压后得到完整的 `pmmaster` 目录。`v7` 表示数据结构版本，`r3` 表示本次修订；相邻 manifest JSON 记录每个文件、源文件集合与整个压缩包的 SHA-256 校验值。
 
 - 先看包内 `docs/README.md`，再按使用入口阅读 `SKILL.md` 和 `使用手册.md`。
 - 飞书内部智能体：配置指令、知识材料、真实表字段、成员/日历/消息工具和宿主触发，按 `references/feishu-setup.md` 接入。
@@ -16,12 +16,12 @@
 完成仓库 README 中的测试和生成一致性检查后，在仓库根目录运行：
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/package_release.py --name pmmaster-skill-v7-20261111-r2
-.\.venv\Scripts\python.exe -X utf8 scripts/package_release.py --name pmmaster-skill-v7-20261111-r2 --check
+.\.venv\Scripts\python.exe -X utf8 scripts/package_release.py --name pmmaster-skill-v7-20261111-r3
+.\.venv\Scripts\python.exe -X utf8 scripts/package_release.py --name pmmaster-skill-v7-20261111-r3 --check
 ```
 
 脚本只收集 `project/` 的源码、文档、模板与虚构演示，排除工作目录、缓存、凭据文件、备份以及非指定演示数据库。文件内容仍需发布前人工核对，模式扫描不能代替资料脱敏。压缩包内路径、权限和时间固定；在相同 Python/zlib 环境中，同一份来源可生成相同字节。源文件校验值不依赖机器路径、文件修改时间或打包时间。
 
 仓库通过 `.gitattributes` 保留已审阅文件的原始换行字节，避免 Windows 与其他系统检出时自动转换换行而改变校验值。调整换行也是来源变更，需要重新生成对应修订包。
 
-已有同名交付包内容不同时，脚本拒绝覆盖；应使用新的修订名。`--check` 会把现有压缩包及 manifest 与当前源文件逐一核对，不修改文件。上次修订包仅在本地留作对照，不作为本次仓库交付。
+已有同名交付包内容不同时，脚本拒绝覆盖；应使用新的修订名。`--check` 会把现有压缩包及 manifest 与当前源文件逐一核对，不修改文件。r2 保留为历史版本；无修订号的原始导入包仅留本地；本次以 r3 为准。

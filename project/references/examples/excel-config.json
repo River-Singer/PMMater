@@ -10,6 +10,7 @@
     "PER-VENDOR"
   ],
   "daily_time": "09:00",
+  "workflow_time": "10:00",
   "daily_deadline": "10:30",
   "collection_time": "09:00",
   "plan_cutoff": "10:30",

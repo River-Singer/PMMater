@@ -247,7 +247,9 @@ def management_review(data, *, now, period="week", prior_data=None, lookahead_we
         checks.append({"name": "移交资料", "present": any(d.get("document_type") == "runbook" and d.get("status") == "approved" for d in data.get("project_documents", [])), "source": "project_documents"})
     from .attendance import plan_daily_confirmations
     daily_status = plan_daily_confirmations(data, project["id"], instant)
+    from .workflow import workflow_review
     return {"project_id": project["id"], "as_of": instant.isoformat(), "timezone": zone, "period": period, "period_start": start.isoformat(), "period_end": today,
+        "workflow": workflow_review(data, now=instant),
         "schedule_audit": schedule_audit, "counts": grouped, "delays": delay_review(data, now=now), "commitments": commitment_review(data, now=now),
         "resources": capacity_summary(data, project["id"], week_start=week),
         "resource_forecast": forecast, "lookahead_weeks": lookahead_weeks,
@@ -325,6 +327,8 @@ def render_management_section(data, *, as_of, phase="pre_meeting", period="week"
                 decision = '<div class="dc-field"><label>审议与实际决定</label><div class="val">'+gap("未登记审议事项")+'</div></div>'
             out.append('<article class="delay-card '+h(state)+'" data-delay-id="'+h(r["id"])+'">'+main+explain+remedy+decision+'</article>')
         out.append('</div>')
+    from .management_text import render_workflow_review
+    out.append(render_workflow_review(data, review["workflow"]))
     out.append(decisions_html)
     out.append('<h3 class="block-title">人员资源与今日安排</h3><p class="note">净可用容量含本项目及对应运维；休假不重复扣减，未回复不等于缺勤。</p><div class="mgmt-grid"><section><h3>今日工作安排</h3>')
     confirmations = review["daily_confirmations"]

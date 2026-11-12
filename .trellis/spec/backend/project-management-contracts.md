@@ -15,8 +15,12 @@ Applies to `project/pm_core`, generated workbook/schema/docs, and Feishu/runtime
 - `confirm_day(store, project_id, person_id, day, *, periods=("AM", "PM"), values, actor, now=None)` writes arrangement confirmations, not actual attendance.
 - `capacity_summary(data, project_id, week_start=None)` returns confirmed capacity rows and derived availability.
 - `plan_followups(data, *, now, config=None)` and `management_review(data, *, now, period="week", prior_data=None, lookahead_weeks=6, schedule_audit=None)` are pure projections.
+- `workflow_review(data, *, now, config=None)` projects readiness, current-owner feedback, unique-leaf parent rollups and traceable task/resource exposures without changing source records.
+- `plan_workflow_followups(data, *, now, config=None)` returns `{review,items,pending,reason}` for the project-local daily `workflow_time` (default `10:00`); the host must invoke the tick.
 - `execute_action(action, backend, ledger, policy, *, client=None, dry_run=True)` executes a sourced business action.
-- `dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True)` rereads facts, plans scoped reminders and records individual occurrences.
+- `project_group_actions(data, plan, config, *, now=None)` normalizes source/obligation identities and returns `{recipients,pending}` without transport or business writes.
+- `action_batches(actions, config)` returns bounded `{actions,text}` batches; the preview and live dispatch use this renderer.
+- `dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True)` rereads facts, plans scoped reminders and records individual occurrences and message batches.
 - `Ledger.reconcile(key, *, outcome, evidence)` accepts `applied` or `not_applied` only for failed/uncertain executions, after actual verification.
 - `audit_schedule_changes(data, *, history=None, prior_data=None, now, policy=None)` returns `coverage`, `signals`, `original_commitments`, `alert_count` and `as_of` without writing.
 
@@ -45,6 +49,32 @@ Human-resource confirmation uses `people.person_type`, not project role: only `v
 ### Weekly and reporting evidence
 
 Baseline dates, latest forecasts and confirmed weekly intermediate outcomes are separate. Monday confirmation uses the real confirmation instant. Friday morning does not mark an afternoon deadline missed prematurely. Preserve original facts when followup reports reference a prior report via `review_of`. A report and its document payload use one source snapshot/cutoff; history absent means trend unknown.
+
+### Daily task readiness and linked impacts
+
+The 10:00 routine covers incomplete project leaves, including undated intake. Missing title, description, acceptance criteria, current forecast interval, valid owner/contact or acceptance responsibility is `missing_data`; lack of a dated nonfuture progress note attributed to the current owner is `awaiting_feedback`. Such feedback is labeled as an owner response, never as an authenticated formal assignment acceptance or confirmation of later reassignments. Completed leaves stop ordinary followups and cancelled leaves are excluded. Planned future work may have basic gaps, but its old response is not automatically a daily progress obligation. Progress freshness uses `progress_confirmed_at`, never an arbitrary edit timestamp. No state or baseline is rewritten, and incomplete leaves remain in the project denominator.
+
+Parent rollups count each descendant leaf once. A done parent with unfinished leaves is an inconsistency for review, not a reason to overwrite either status. Ordered ancestors, explicit dependency edges/successors, downstream ancestors and linked deliverables preserve the causal scope; source and successor leaf sets are separate and deduplicated. Graph cycles fail explicitly. A source forecast after an ancestor/project baseline is reported as that exact date mismatch. Dependency reachability alone never proves a hard block, critical path or a quantified project delay.
+
+Task paths with no current risk signals (including completed tasks) preserve their relationships without claiming active propagated risk. A task forecast finish is a delivery forecast, never the deadline for missing-info submission. Such reminders identify the forecast separately and leave an unagreed submission deadline unknown. Resource schedule windows likewise remain evidence, not invented commitment deadlines.
+
+`workflow.constraints` contains project resource exposures; `operations_constraints` keeps operations-only sources separate and outside project risk counts. An unlinked project resource stays `needs_mapping` with an empty task path, never spreads to all tasks. Resource constraints use existing resource/leave/interface/register evidence. Task-hour demand, substitute capacity and procurement need-by dates cannot be invented. Employees are excluded only from resource confirmation, not from task followups or resource risk analysis. Human-resource fact coordination goes to the PM; execution and decision obligations retain their recorded responsible person.
+
+Runtime uses the verified project calendar and effective date window, suppresses paused/closed projects and quiet hours, and permits a later same-day tick after 10:00 to catch up. It neither creates a scheduler nor changes the 09:00 attendance/weekly collection entrance. Unknown routing is returned in `plan.pending`, not discarded. Real mentions still need valid open IDs and the configured recipient scope. The dispatch ledger key includes the constraint source identity, so two resource problems on one source row do not suppress each other. Successful/running/unknown occurrences are not resent. Re-reading stops resolved gaps; 10:30 stale-progress reminders overlapping the routine are consolidated, while due-date, acceptance and collection-cutoff events stay independent.
+
+### Structured project-group actions
+
+Each projected action carries a stable source plus obligation identity, `type` (`decision`, `execution`, `filling`, `coordination`), actual `recipient_id`/`responsible_id`, `action`, `deadline`, `deadline_basis`, `evidence_required`, `source`, `impact` and optional `planned_finish`/`date_reference`. `plan.group_actions` exposes this exact projection; deliveries contain the same bounded text used for live sends. Required-field keys are rendered through Chinese catalogue labels. Source URLs are either complete or omitted with a pointer to the full preview, never truncated into a misleading link.
+
+Resolve field labels from the source table first (for example interface `notes` is not a capacity note), with composite/helper-field fallback. Preserve completed-parent/unfinished-child consistency actions despite normal closed-source suppression. Offline Excel previews retain valid local recipients without Feishu contact IDs and still surface missing-contact gaps; live mentions require verified identity.
+
+Decisions use explicit `decision_by_id`, never the register owner as inferred authority. Interface and material/register execution uses the recorded owner. Next actions use the explicit coordinator with task-owner fallback; registered unfulfilled remediation uses `remediation_owner_id` immediately when a risk/overdue routine finds it, even before its expected completion date. Missing/unusable authority or responsibility becomes a PM assignment/coordination action, with the original deadline only as context. A proposed measure is not an approved decision. Employee task/decision/execution duties remain valid; only routine human-capacity confirmation is exempt. Missing PM identity produces pending routing rather than a discarded reminder. Excel mode supports an offline structured preview without Feishu IDs; actual sending still requires a valid open ID and allowlisted recipient.
+
+Only explicit action timestamps (`deadline_at`, `next_due_at`, `remediation_expected`) or configured collection cutoff times become action DDLs. Task baseline/forecast and interface expected readiness remain separately labeled context; missing submission/assignment deadlines remain unknown. A named approved decision with a conclusion and nonfuture decision timestamp stops decision requests; implementation followups require their own recorded task/action. No implicit execution obligation is invented from a decided register.
+
+Merge legacy and routine reminders by source, obligation and recipient: duplicate decision, register execution, progress maintenance, unblock/next-action and remediation obligations collapse; different collection cutoffs and different actual actions stay distinct. Default bounds are `group_max_items=5` and `group_max_chars=3500` (valid ranges 1–10 and 1200–6000). Long text is condensed with a source pointer while full fields remain in the projection. Batches are claimed and sent independently with durable request UUIDs and per-occurrence receipts. A successful batch does not mark other batches sent; unknown/running batches and their occurrences never auto-retry. Definite failures may retry within the configured attempt limit; uncertain recovery requires evidence-based reconciliation of the batch and associated occurrences. Feishu mentions remain structured `at` plus plain `text` elements; source text can never manufacture an `at`/`@all` element.
+
+`runtime-reconcile` intentionally updates one key at a time. For a verified message outcome, suspend the project's ticks and reconcile its `batch_key` and every associated `items[].occurrence_key` using the same real evidence before resuming. Reconciling only the batch must not bypass unknown occurrence protection. Unrelated chunks remain unchanged; changing chunk limits must never reset an occurrence's retry allowance. Persist returned keys and outcomes so this recovery is operationally possible.
 
 ### Schedule-edit evidence
 
@@ -91,6 +121,9 @@ With a configured `display_field`, persist the post-write value as `detail.displ
 | Delete referenced record | `referenced`, retain all records |
 | Unknown annual calendar/project window | pending; no ordinary workday notification |
 | Missing person identity or participation window | pending; do not guess a mention target |
+| Undated intake or missing task owner/detail | visible readiness gap, route task followup to PM if owner cannot receive |
+| Parent is done with open leaves | flag completion inconsistency, preserve original statuses |
+| Resource has no explicit WBS relation | report pending mapping; never infer exposure for every task |
 | All-day numeric capacity | reject duplicated hours |
 | Incomplete capacity | null + pending |
 | Source suggestion, ambiguous target, missing authority | pending action; no external mutation |
@@ -113,11 +146,15 @@ With a configured `display_field`, persist the post-write value as `detail.displ
 
 Use the existing unittest suite and deterministic aware clocks, isolated SQLite/temp paths and mocked HTTP. Assert v6 migration preservation/idempotence/backups, workbook roundtrip and catalogue synchronization, holiday/makeup/company/personal precedence, unknown years, AM/PM nonduplication, capacity nulls, operation isolation, weekly cutoffs and immutable report versions. Cover pagination/identity/field mapping, read-before/write-after conflict, source/decision authority, reference deletion, retries/revisions/uncertainty and partial calendar recovery. Open generated HTML and inspect affected workbook sheets. No live-tenant success claim from mocked tests.
 
+For workflow changes assert undated intake coverage, actual current-owner response versus other/future/missing evidence, future-plan progress exemption, parent/leaf deduplication, downstream parent deliverables, date evidence without fabricated delay days, 09:59/10:00/quiet-hour and calendar boundaries, explicit unroutable cases, resolved-gap suppression, old stale-progress consolidation and distinct resource occurrence identities.
+
 The supported Windows runtime needs timezone data from requirements. Construct timezone-sensitive fixtures with `ZoneInfo` rather than assuming a permanent UTC offset. SQLite context managers do not close connections; explicitly close backup handles before replacing/removing Windows files.
 
 Windows archive copying compares dev/inode/size/mtime across path-stat and handle-fstat. Do not compare ctime between those APIs under Python 3.14; they may differ for the same unchanged file. Preserve replacement/mutation detection using same-handle before/after checks, byte digests and final identity checks. Regression tests must detect same-size edits with restored mtime and path replacement, not just make the copy succeed.
 
 ## 7. Wrong vs Correct
+
+Wrong: mark the entire project blocked because one linked resource is unconfirmed. Correct: retain the source gap, its explicitly related leaves/ancestors/dependency successors and any date mismatch; report project completion impact as pending evaluation when scheduling evidence is absent.
 
 ```python
 # Wrong: missing observation becomes a business fact.
