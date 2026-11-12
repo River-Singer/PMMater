@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "project"
 TOP_DIRS = {"pm_core", "data", "docs", "references", "tests", "demo"}
 ROOT_FILES = {
-    "SKILL.md", "README.md", "使用手册.md", "pmmaster_导出说明.md",
+    "SKILL.md", "README.md", "LICENSE", "使用手册.md", "pmmaster_导出说明.md",
     "requirements.txt", "项目管理模板.xlsx", "install_weekly_task.ps1", "run_demo.bat",
 }
 SKIP_DIRS = {"__pycache__", ".venv", "venv", "workspace", "node_modules", ".pytest_cache"}
@@ -55,7 +55,7 @@ def package_files(source: Path) -> dict[str, bytes]:
                 continue
             if ".backup" in name or ".bak" in name:
                 continue
-            if path.suffix.lower() not in EXTENSIONS and relative != "demo/demo.sqlite3":
+            if path.suffix.lower() not in EXTENSIONS and relative not in {"LICENSE", "demo/demo.sqlite3"}:
                 continue
             # Real exports/configs belong in workspace/, not a distributable demo.
             if name.lower().startswith(("credential", "secret")):
@@ -70,6 +70,15 @@ def package_files(source: Path) -> dict[str, bytes]:
     if missing:
         raise ValueError(f"Missing required package files: {', '.join(missing)}")
     return dict(sorted(content.items()))
+
+
+def verify_license(root_license: Path, content: dict[str, bytes]) -> None:
+    """Match the repository notice to the exact bytes selected for the archive."""
+    if is_link(root_license) or not root_license.is_file():
+        raise ValueError("Repository LICENSE must be a regular file")
+    notice = root_license.read_bytes()
+    if not notice.strip() or content.get("pmmaster/LICENSE") != notice:
+        raise ValueError("Repository LICENSE and project/LICENSE must be nonempty and byte-identical")
 
 
 def build_manifest(content: dict[str, bytes], name: str) -> dict:
@@ -118,6 +127,7 @@ def main() -> None:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", args.name):
         parser.error("--name must be a plain file stem with letters, digits, dots, hyphens or underscores")
     content = package_files(SOURCE)
+    verify_license(ROOT / "LICENSE", content)
     manifest = build_manifest(content, args.name)
     archive_path = args.out_dir / manifest["archive"]
     manifest_path = args.out_dir / f"{args.name}.manifest.json"

@@ -1,5 +1,7 @@
 # PMMater / pmmaster
 
+作者：**allenxujianyang@outlook.com**。采用 [自定义非商业使用许可](LICENSE)：商业使用及再分发须事先取得书面授权（法律及托管平台已授予的权限除外）；不得删除作者声明或冒名发布。使用范围和授权方式见 [许可与作者](project/docs/许可与作者.md)。
+
 一套表管理一个项目的持续跟进 Skill。首选飞书内部智能体与多维表格；通用智能体可使用离线 Excel。成员更新本人任务，PM 统筹计划、风险、资源和决定。
 
 通过智能体对话维护记录与生成材料，Excel 用于离线填写，HTML 用于查看与审议。生成的 HTML 可直接双击打开，内含导航、层级展开和时间范围切换，无需启动本地网页服务。
@@ -41,3 +43,5 @@ Set-Location project
 源码、测试、模板、演示与用户文档在 `project/`；开发流程和契约在 `.trellis/`，可复用开发技能在 `.agents/skills/`。本地任务记录、原始导入资料、凭据和正式项目工作库不纳入仓库。
 
 改版 HTML 时维护渲染器与设计 token，并重新生成演示。质量检查通过后，在仓库根目录运行[打包脚本](scripts/package_release.py)，构建方式及校验命令见[交付说明](release/README.md)。
+
+修改发布工具后，在仓库根目录运行 `.\.venv\Scripts\python.exe -m unittest discover -s tests -q` 检查打包契约。仓库 `LICENSE` 与 `project/LICENSE` 须保持一致，交付包必须带上许可。

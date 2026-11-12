@@ -28,6 +28,10 @@ See `python -m pm_core.cli --help` for the command surface and `references/` for
 
 ## 3. Contracts
 
+### Release licensing
+
+The original PMMater/pmmaster materials use the custom noncommercial source-available license in `LICENSE`; preserve third-party and platform/statutory rights. Do not describe it as an OSI-approved open-source license. The author/contact is `allenxujianyang@outlook.com`. Keep root `LICENSE` and `project/LICENSE` byte-identical. Both release build and check must reject missing, empty or divergent notices; the exact packaged notice participates in the manifest. Only the root package `LICENSE` is an extensionless allowlist exception. Never rewrite historical archives to insert a later license; issue a new release name. Run root `tests/` packaging checks when changing this contract.
+
 ### Canonical data and migrations
 
 One complete data object has the tables from `schema.TABLES` and at most one project. Project delivery records reside in `wbs`; operations, optimization and configuration work reside in `operations`. Never include completed operations in project WBS or weekly commitment denominators. v6 migration preserves original IDs, event history and saved report snapshots. Historical nonproject WBS aliases with `migrated_operation_id` are immutable and excluded from active execution projections. New nonproject WBS writes fail explicitly.
