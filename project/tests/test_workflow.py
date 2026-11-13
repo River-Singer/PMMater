@@ -35,7 +35,7 @@ def fixture():
                    {'id': 'GROUP', 'title': '一级交付', 'project_id': 'P', 'scope': 'project', 'node_kind': 'deliverable',
                     'parent_id': 'ROOT', 'status': 'ready', 'baseline_finish': '2026-11-20'},
                    {'id': 'LEAF', 'title': '最小任务', 'project_id': 'P', 'scope': 'project', 'node_kind': 'task',
-                    'parent_id': 'GROUP', 'status': 'ready', 'description': '明确工作范围', 'acceptance_criteria': '通过可复核场景',
+                    'parent_id': 'GROUP', 'status': 'ready', 'priority': 'P2', 'description': '明确工作范围', 'acceptance_criteria': '通过可复核场景',
                     'owner_id': 'OWNER', 'acceptor_id': 'QA', 'forecast_start': '2026-11-10', 'forecast_finish': '2026-11-20',
                     'baseline_finish': '2026-11-20', 'progress_note': '已核对计划，开始处理',
                     'progress_confirmed_by_id': 'OWNER', 'progress_confirmed_at': '2026-11-11T09:00:00+08:00'}]
@@ -82,7 +82,8 @@ class WorkflowTests(unittest.TestCase):
         self.row.update(forecast_start='2026-11-18', progress_confirmed_at='2026-11-01T09:00:00+08:00')
         self.assertFalse(self.review()['tasks'][0]['progress_stale'])
         self.assertEqual([], self.routine()['items'])
-        self.row.update(status='done', description=None, progress_note=None)
+        self.row.update(status='done', description=None, progress_note=None, actual_start='2026-11-10',
+                        actual_finish='2026-11-11', completion_evidence='已核验结果')
         self.assertEqual('closed', self.review()['tasks'][0]['readiness'])
         self.assertEqual([], self.routine()['items'])
 
@@ -188,7 +189,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(0, report['summary']['resource_constraints'])
         self.assertEqual(1, report['summary']['operations_resource_constraints'])
         self.assertEqual([], report['operations_constraints'][0]['impact']['affected_leaf_ids'])
-        self.assertIn('仅关联运维', self.routine()['items'][0]['reason'])
+        self.assertIn('仅关联运维', next(i for i in self.routine()['items'] if i['kind'] == 'workflow_resource')['reason'])
 
     def test_ten_am_calendar_timezone_and_catchup(self):
         self.row['description'] = None
@@ -227,11 +228,12 @@ class WorkflowTests(unittest.TestCase):
             def send(): return dispatch_tick(lambda: self.data, self.config, ledger, client, now=NOW, dry_run=False)
             self.assertEqual('unknown', send()['deliveries'][0]['status'])
             send(); self.assertEqual(1, client.count)
-            self.row['description'] = '已完善'
+            self.row.update(description='已完善', actual_start='2026-11-10', status='in_progress')
             self.assertFalse(send()['plan']['recipients'])
             ledger.close()
 
     def test_distinct_resource_signals_share_source_without_dedupe_collision(self):
+        self.row.update(actual_start='2026-11-10', status='in_progress')
         c = {'id': 'registers:R:gap', 'kind': 'register', 'source_table': 'registers', 'source_id': 'R',
              'title': '资源', 'work_item_ids': ['LEAF'], 'owner_id': 'OWNER', 'reason': '未到位', 'next_action': 'PM协调'}
         self.resources.return_value = [c, dict(c, id='registers:R:decision', kind='decision')]

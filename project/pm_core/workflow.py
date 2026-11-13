@@ -174,12 +174,16 @@ def workflow_review(data, *, now, config=None):
             if w.get('status') == 'blocked': signals.append('任务受阻：' + (w.get('blocker_reason') or '原因待补'))
             if facts['delay_state'] == 'overdue': signals.append('已超过任务对照完成日')
             elif facts['delay_state'] == 'risk': signals.append('任务存在延期风险')
+        from .task_scenarios import task_scenarios
+        scenarios = task_scenarios(w, today=local.date(), instant=instant, feedback=feedback,
+                                   missing_fields=missing, delay_state=facts['delay_state'], stale=stale)
         tasks.append({'id': wid, 'title': w.get('title', wid), 'owner_id': w.get('owner_id'),
                       'owner_name': owner.get('name'), 'status': w.get('status'), 'source_url': w.get('source_url'),
                       'readiness': state, 'readiness_label': READINESS[state],
                       'missing_fields': [] if closed else list(dict.fromkeys(missing)), 'feedback': feedback,
                       'progress_stale': stale, 'signals': signals, 'delay_state': facts['delay_state'],
-                      'forecast_finish': w.get('forecast_finish'), 'impact': impact_for([wid], has_risk=bool(signals))})
+                      'forecast_finish': w.get('forecast_finish'), 'scenarios': scenarios,
+                      'impact': impact_for([wid], has_risk=bool(signals))})
 
     def counts(rows):
         return {'total': len(rows), 'done': sum(t['status'] == 'done' for t in rows),
@@ -241,18 +245,27 @@ def plan_workflow_followups(data, *, now, config=None):
         else: items.append(row)
         return row
     for t in review['tasks']:
-        if t['status'] == 'done': continue
+        scenarios = t.get('scenarios', [])
+        if t['status'] == 'done':
+            if scenarios:
+                item = add('workflow_task_audit', 'wbs', t['id'], t['title'], t['owner_id'],
+                           list(dict.fromkeys(f for s in scenarios for f in s['required_fields'])),
+                           '已报完成但完成事实待补齐；核对真实日期和成果，不推断未完成或延期。')
+                item['scenarios'] = scenarios
+            continue
         fields = list(t['missing_fields'])
         if t['feedback']['state'] != 'owner_responded' or t['progress_stale']:
             fields += ['progress_note', 'progress_confirmed_at', 'progress_confirmed_by_id']
-        if not fields and t['status'] != 'blocked' and t['delay_state'] not in ('overdue', 'risk'): continue
+        if not fields and not scenarios and t['status'] != 'blocked' and t['delay_state'] not in ('overdue', 'risk'): continue
+        fields.extend(f for s in scenarios for f in s['required_fields'])
         if t['status'] == 'blocked': fields += ['blocker_reason', 'next_action']
         if t['delay_state'] in ('overdue', 'risk'): fields += ['delay_impact', 'remediation_action', 'remediation_expected']
         chain = ' → '.join([t['title'], *[n['title'] for n in t['impact']['ancestors']], project.get('name', project['id'])])
         schedule = ('；任务当前预计完成日：' + str(t['forecast_finish'])) if t.get('forecast_finish') else ''
-        add('workflow_task', 'wbs', t['id'], t['title'], t['owner_id'], list(dict.fromkeys(fields)),
+        item = add('workflow_task', 'wbs', t['id'], t['title'], t['owner_id'], list(dict.fromkeys(fields)),
             '；'.join(t['signals']) + '。影响路径：' + chain + '。' + t['impact']['project_assessment'] +
             schedule + '；资料补填期限尚未约定，由PM确认。')
+        item['scenarios'] = scenarios
     for p in review['parents']:
         if p['inconsistent_completion']:
             add('workflow_parent_conflict', 'wbs', p['id'], p['title'], p['owner_id'], ['status'],

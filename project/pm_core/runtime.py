@@ -19,13 +19,23 @@ def load_config(path):
     attempts = config.get('max_attempts', 3)
     if isinstance(attempts, bool) or not isinstance(attempts, int) or not 1 <= attempts <= 10:
         raise ValueError('max_attempts must be an integer between 1 and 10')
-    for key in ('daily_time', 'daily_deadline', 'collection_time', 'plan_cutoff', 'result_cutoff', 'quiet_after', 'workflow_time'):
+    for key in ('daily_time', 'daily_deadline', 'collection_time', 'plan_cutoff', 'result_cutoff', 'quiet_after', 'workflow_time', 'response_cutoff', 'escalation_time'):
         if config.get(key):
             time.fromisoformat(config[key])
+    for key in ('response_cutoff', 'escalation_time'):
+        if key in config and (not isinstance(config[key], str) or len(config[key]) != 5
+                              or time.fromisoformat(config[key]).strftime('%H:%M') != config[key]):
+            raise ValueError(key + ' must be a project-local HH:MM time')
     for value in config.get('inspection_times', ['10:30', '16:00']):
         time.fromisoformat(value)
     from .group_actions import message_limits
     message_limits(config)
+    grace = config.get('min_response_minutes', 30)
+    if isinstance(grace, bool) or not isinstance(grace, int) or not 0 <= grace <= 1440:
+        raise ValueError('min_response_minutes must be an integer between 0 and 1440')
+    sources = config.get('reply_evidence_sources', [])
+    if not isinstance(sources, list) or any(not isinstance(s, str) or not s.strip() for s in sources):
+        raise ValueError('reply_evidence_sources must be a list of trusted host identifiers')
     if any(k in config for k in ('token', 'access_token', 'app_secret')):
         raise ValueError('Store secrets in the host credential store/environment, not project JSON')
     return config
@@ -102,7 +112,7 @@ def plan_tick(data, config, *, now):
             'pending': pending}
 
 
-def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, history_provider=None, observer=None):
+def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, history_provider=None, observer=None, delivery_clock=None):
     # Provider runs on every tick immediately before sending, so replies/closed tasks stop reminders.
     data = data_provider()
     from .schedule_audit import audit_schedule_changes
@@ -178,6 +188,12 @@ def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, h
                     sent = client.mention(config['chat_id'], uid, actual['text'], request_id=state['request_id'])
                     detail['message_id'] = sent.get('message_id')
                     status = 'succeeded' if detail['message_id'] else 'unknown'
+                    if status == 'succeeded':
+                        from .followup_evidence import record_sent
+                        # Live hosts sample after delivery, not before slow reads/batches.
+                        # A fixed tick instant remains available for deterministic/offline callers.
+                        record_sent(ledger, config, person_id, actual['actions'], detail['message_id'],
+                                    now=delivery_clock() if delivery_clock else now)
                 except FeishuError as exc:
                     status = 'unknown' if exc.uncertain else 'failed'
                     detail['error'] = str(exc)
@@ -193,7 +209,10 @@ def dispatch_tick(data_provider, config, ledger, client, *, now, dry_run=True, h
                 ledger.save(item['occurrence_key'], fingerprint, status, detail)
             results.append({'person_id': person_id, 'status': status, 'detail': detail})
     reviews = dispatch_schedule_reviews(data, audit, config, ledger, client, now=now, dry_run=dry_run)
-    return {'plan': plan, 'deliveries': results, 'schedule_audit': audit, 'pm_reviews': reviews}
+    from .followup_evidence import dispatch_escalation
+    escalation = dispatch_escalation(data, plan, actions, config, ledger, client, now=now, dry_run=dry_run)
+    return {'plan': plan, 'deliveries': results, 'schedule_audit': audit, 'pm_reviews': reviews,
+            'escalation': escalation}
 
 
 def dispatch_schedule_reviews(data, audit, config, ledger, client, *, now, dry_run=True):

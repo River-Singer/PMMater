@@ -12,7 +12,7 @@ from .actions import Ledger, LocalBackend, execute_action, digest
 def add_commands(sub):
     names = ('feishu-pull', 'minutes-read', 'actions-run', 'agent-tick', 'followup-plan',
              'project-calendar', 'attendance-plan', 'attendance-confirm', 'resource-review',
-             'management-review', 'report-publish', 'feishu-config-template', 'feishu-report', 'runtime-reconcile', 'schedule-audit')
+             'management-review', 'report-publish', 'feishu-config-template', 'feishu-report', 'runtime-reconcile', 'schedule-audit', 'followup-evidence-import')
     for name in names:
         p = sub.add_parser(name)
         p.add_argument('--config')
@@ -40,6 +40,18 @@ def run(args):
     config = load_config(args.config) if args.config else None
     command = args.command
     result = None
+    if command == 'followup-evidence-import':
+        if not config or not args.ledger or not args.file or not Path(args.ledger).is_file():
+            raise ValueError('Reply evidence requires config, existing persistent ledger and evidence file')
+        if args.now and config.get('mode') == 'feishu':
+            raise ValueError('Live evidence import uses the actual capture time; --now cannot backdate observations')
+        from .followup_evidence import import_evidence
+        payload = json.loads(Path(args.file).read_text(encoding='utf-8-sig'))
+        ledger = Ledger(args.ledger)
+        try:
+            return import_evidence(ledger, config, payload, now=now, apply=args.apply)
+        finally:
+            ledger.close()
     if command == 'runtime-reconcile':
         if not args.ledger or not args.file or not args.apply:
             raise ValueError('Reconciliation requires --ledger --file --apply and actual verification evidence')
@@ -120,7 +132,8 @@ def run(args):
             from .schedule_history import ScheduleObserver
             observer = ScheduleObserver(ledger.conn) if remote else None
             result = dispatch_tick(backend.read_all, config, ledger, client, now=now, dry_run=not args.apply,
-                                   history_provider=store.history if store and not remote else None, observer=observer)
+                                   history_provider=store.history if store and not remote else None, observer=observer,
+                                   delivery_clock=utc_now if remote else None)
         elif command == 'report-publish':
             if not args.file or not args.ledger:
                 raise ValueError('Report requires a source report file and persistent ledger')
@@ -238,6 +251,8 @@ def config_template(*, profile='canonical'):
             'daily_deadline': '10:30', 'collection_time': '09:00', 'plan_cutoff': '10:30',
             'result_cutoff': '10:30', 'inspection_times': ['10:30', '16:00'], 'workflow_time': '10:00', 'quiet_after': '18:00',
             'group_max_items': 5, 'group_max_chars': 3500,
+            'response_cutoff': '17:00', 'escalation_time': '17:00', 'min_response_minutes': 30,
+            'escalation_recipient_id': '', 'reply_evidence_sources': [],
             'policy': {'allowed_tables': [t for t in TABLES if t not in ('calendars', 'calendar_days')],
                        'allowed_operations': ['query', 'create', 'update', 'delete', 'book', 'reschedule'],
                        'decision_makers': [], 'calendar_id': '', 'organizer_id': '', 'allowed_attendees': []}}

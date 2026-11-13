@@ -51,5 +51,10 @@
     "trusted_approval_sources": [],
     "approved_changes": [],
     "reviewed_changes": []
-  }
+  },
+  "response_cutoff": "17:00",
+  "escalation_time": "17:00",
+  "min_response_minutes": 30,
+  "escalation_recipient_id": "",
+  "reply_evidence_sources": []
 }

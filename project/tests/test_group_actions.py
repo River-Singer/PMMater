@@ -79,7 +79,7 @@ class GroupActionTests(unittest.TestCase):
         self.assertEqual('execution', actions['QA'][0]['type'])
         self.assertIsNone(actions['QA'][0]['deadline'])
         self.assertEqual(('接口预计就绪日', '2026-11-13'), actions['QA'][0]['date_reference'])
-        self.assertEqual('execution', actions['OWNER'][0]['type'])
+        self.assertEqual('execution', next(a for a in actions['OWNER'] if a['source']['id'] == 'R')['type'])
         self.assertEqual('coordination', actions['PM'][0]['type'])
         self.assertFalse(plan['attendance']['eligible'])  # All three are employees.
 

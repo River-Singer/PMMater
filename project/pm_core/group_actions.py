@@ -3,7 +3,8 @@
 Source text stays a plain-text post element; only FeishuClient creates mentions.
 Dates describe their recorded meaning, never an inferred response commitment.
 """
-from datetime import date, time
+from datetime import date, datetime, time
+from zoneinfo import ZoneInfo
 import re
 
 from .schema import TABLES
@@ -64,6 +65,13 @@ def route_item(data, item, *, day, require_identity=False):
 def project_group_actions(data, plan, config, *, now=None):
     """Normalize and merge the same source/obligation, retaining distinct commitments."""
     zone = config['timezone']; day = plan['date']; merged = {}; pending = []
+    cutoff_time = time.fromisoformat(config.get('response_cutoff', '17:00'))
+    if cutoff_time.tzinfo is not None:
+        raise ValueError('response_cutoff must be a project-local time without offset')
+    response_cutoff = datetime.combine(date.fromisoformat(day), cutoff_time, ZoneInfo(zone))
+    observed = now or plan.get('as_of') or (plan.get('workflow') or {}).get('as_of')
+    observed = parse_datetime(observed) if isinstance(observed, str) else observed
+    response_deadline = response_cutoff.isoformat() if observed and observed < response_cutoff else None
     task_reviews = {t['id']: t for t in (plan.get('workflow') or {}).get('tasks', [])}
     for original_person, items in plan.get('recipients', {}).items():
         for raw in items:
@@ -75,7 +83,7 @@ def project_group_actions(data, plan, config, *, now=None):
                 continue
             kind = item['kind']; table = item.get('table', 'daily_confirmations'); rid = item.get('record_id', original_person)
             row = next((r for r in data.get(table, []) if r['id'] == rid), {})
-            if row.get('status') in ('done', 'cancelled', 'closed', 'rejected', 'retired') and kind != 'workflow_parent_conflict':
+            if row.get('status') in ('done', 'cancelled', 'closed', 'rejected', 'retired') and kind not in ('workflow_parent_conflict', 'workflow_task_audit'):
                 continue
             if table == 'registers' and row.get('kind') == 'decision' and row.get('status') == 'approved' and row.get('decision') and row.get('decision_by_id'):
                 try:
@@ -96,7 +104,25 @@ def project_group_actions(data, plan, config, *, now=None):
                               'deadline': _deadline(due, day, zone),
                               'deadline_basis': basis if due else '尚未登记本行动处理期限，请确认具体日期/时间',
                               'date_reference': reference})
-            if kind == 'workflow_task':
+            scenarios = item.get('scenarios', [])
+            if kind in ('workflow_task', 'workflow_task_audit') and scenarios:
+                groups = {}
+                for scenario in scenarios:
+                    groups.setdefault(scenario['category'], []).append(scenario)
+                for category, selected in groups.items():
+                    types = {'next_action': 'execution', 'remediation': 'execution', 'acceptance': 'decision'}
+                    due = row.get('next_due_at') if category == 'next_action' else row.get('remediation_expected') if category == 'remediation' else None
+                    basis = '任务登记的下一步行动期限' if category == 'next_action' else '已登记的补救措施预期落实日' if category == 'remediation' else None
+                    add(category, types.get(category, 'filling'), '；'.join(s['title'] for s in selected),
+                        list(dict.fromkeys(f for s in selected for f in s['required_fields'])), due, basis)
+                    specs[-1].update(scenario_ids=[s['id'] for s in selected],
+                                     questions=[q for s in selected for q in s['questions']])
+                if (review.get('delay_state') in ('risk', 'overdue') and row.get('remediation_action')
+                        and not (row.get('remediation_actual') and row.get('remediation_result'))
+                        and 'remediation' not in groups):
+                    add('remediation', 'execution', '核实并推进登记的补救措施：' + row['remediation_action'] + '；尚未批准的建议请先确认授权。',
+                        ['remediation_actual', 'remediation_result'], row.get('remediation_expected'), '已登记的补救措施预期落实日')
+            elif kind == 'workflow_task':
                 maintenance = [f for f in fields if f not in ('blocker_reason', 'next_action', 'delay_impact', 'remediation_action', 'remediation_expected')]
                 if maintenance: add('maintenance', 'filling', '补齐任务资料并由当前负责人反馈计划/进展。', maintenance)
                 if row.get('status') == 'blocked':
@@ -142,8 +168,9 @@ def project_group_actions(data, plan, config, *, now=None):
                     item.get('reason', '确认事项与下一步。'))
             for spec in specs:
                 routed = item
-                if spec['obligation'] in ('next_action', 'remediation'):
-                    responsible = ((row.get('coordinator_id') or row.get('owner_id')) if spec['obligation'] == 'next_action' else row.get('remediation_owner_id')) if row else item.get('responsible_id')
+                if spec['obligation'] in ('next_action', 'remediation', 'acceptance'):
+                    responsible = ((row.get('coordinator_id') or row.get('owner_id')) if spec['obligation'] == 'next_action' else
+                                   row.get('acceptor_id') if spec['obligation'] == 'acceptance' else row.get('remediation_owner_id')) if row else item.get('responsible_id')
                     routed = route_item(data, dict(item, responsible_id=responsible), day=day, require_identity=require_identity)
                     if routed.get('routing_status'):
                         pending.append(routed)
@@ -159,10 +186,14 @@ def project_group_actions(data, plan, config, *, now=None):
                               planned_finish=row.get('forecast_finish') if table in ('wbs', 'operations') else None,
                               routing_note=routing)
                 action['source_kinds'] = [kind]
+                action.setdefault('scenario_ids', [])
+                action.setdefault('questions', [])
                 if identity in merged:
                     old = merged[identity]
                     old['required_fields'] = list(dict.fromkeys(old['required_fields'] + action['required_fields']))
                     old['source_kinds'] = list(dict.fromkeys(old['source_kinds'] + [kind]))
+                    old['scenario_ids'] = list(dict.fromkeys(old['scenario_ids'] + action['scenario_ids']))
+                    old['questions'] = list({q['id']: q for q in old['questions'] + action['questions']}.values())
                     if action['impact']: old['impact'] = action['impact']
                     if c: old['action'] = action['action']
                 else: merged[identity] = action
@@ -171,8 +202,17 @@ def project_group_actions(data, plan, config, *, now=None):
         source_labels = {f.name: f.label for f in TABLES.get(action['source']['table'], {}).get('fields', [])}
         fields = '、'.join(source_labels.get(f, LABELS.get(f, '相关信息（详见来源）')) for f in action['required_fields'])
         action['evidence_required'] = ('请回填/回复：' + fields if fields else '回复处理结果、依据及下一步；未完成请说明原因与明确时间。')
+        if any(f in action['required_fields'] for f in ('actual_start', 'actual_finish', 'remediation_actual')):
+            action['evidence_required'] = '实际日期仅在已发生时填写；未开始/未完成请如实说明。' + action['evidence_required']
         if action.get('routing_note'):
             action['evidence_required'] = '明确实际责任人及处理期限；决定仍由已确认的决定人作出。' if action['obligation'] == 'decision' else '明确责任人、协调安排及处理期限。'
+            action['questions'] = [{'id': 'routing:assignment', 'prompt': action['evidence_required']}]
+        if not action['questions']:
+            action['questions'] = [{'id': 'response', 'prompt': '请回复处理进展、结果依据及所需支持；未解决请说明后续安排。'}]
+        action['response_fields'] = [q['id'] for q in action['questions']]
+        action['response_deadline'] = response_deadline
+        action['response_deadline_basis'] = ('项目配置的当日回复截止，与交付或补救期限分开。' if response_deadline else
+                                             '本轮已过回复截止或观察时点未知；需另约回复期限，不立即算迟复。')
         grouped.setdefault(action['recipient_id'], []).append(action)
     return {'recipients': grouped, 'pending': pending}
 
@@ -208,6 +248,11 @@ def render_action(action, number, *, limit=1100):
     if action.get('planned_finish'): lines.append('任务当前预计完成日：' + _short(action['planned_finish'], 75) + '（非本次回复DDL）')
     ref = action.get('date_reference')
     if ref and ref[1]: lines.append(_short(ref[0], 30) + '：' + _short(ref[1], 75) + '（对照信息）')
+    if action.get('questions'):
+        # Controlled prompts are never truncated: reply completeness is judged
+        # only against questions the recipient actually received.
+        lines.append('需回复：' + ' '.join(str(i) + ') ' + q['prompt'] for i, q in enumerate(action['questions'], 1)))
+        lines.append('回复截止：' + (action.get('response_deadline') or '待另行约定') + '（不改变任务DDL）')
     return '\n'.join(lines)
 
 
